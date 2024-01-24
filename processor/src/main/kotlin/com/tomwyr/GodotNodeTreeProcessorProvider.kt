@@ -6,6 +6,8 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 
 class GodotNodeTreeProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
-        TODO()
+        return with (environment) {
+            GodotNodeTreeProcessor(logger, codeGenerator, options)
+        }
     }
 }
