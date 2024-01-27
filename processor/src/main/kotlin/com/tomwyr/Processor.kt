@@ -1,10 +1,7 @@
 package com.tomwyr
 
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.processing.SymbolProcessor
-import com.google.devtools.ksp.symbol.FileLocation
+import com.google.devtools.ksp.containingFile
+import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.validate
 import java.io.File
@@ -14,15 +11,17 @@ class GodotNodeTreeProcessor(
         private val generator: CodeGenerator,
         private val options: Map<String, String>,
 ) : SymbolProcessor {
-    override fun process(resolver: Resolver): List<KSAnnotated> {
 
+    override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver.getSymbolsWithAnnotation("com.tomwyr.GodotNodeTree")
         val symbol = symbols.firstOrNull() ?: return emptyList()
-        val symbolPath = (symbol.location as? FileLocation)?.filePath
+        val symbolFile = symbol.containingFile ?: throw UnknownAnnotationLocationException()
 
-        symbolPath ?: throw UnknownAnnotationLocationException()
+        symbol.containingFile?.packageName?.asString().let {
+            println(it)
+        }
 
-        val rootPath = symbolPath.split("/src/")
+        val rootPath = symbolFile.filePath.split("/src/")
                 .takeIf { it.size > 1 }
                 ?.let { it.toMutableList().apply { removeLast() } }
                 ?.joinToString("")
@@ -47,12 +46,20 @@ class GodotNodeTreeProcessor(
             Scene(name, nodes)
         }.toList()
 
-        scenes.forEach {
-            logger.warn("[${it.name}]")
-            logger.warn(it.nodes.joinToString("\n") { "${it.name} ${it.type}" })
-            logger.warn("\n")
-        }
+        val annotationPackage = symbolFile.packageName.asString()
 
+        val content = NodeTreeRenderer().render(annotationPackage, scenes)
+
+        val file = generator.createNewFile(
+                dependencies = Dependencies(false, symbolFile),
+                packageName = "com.tomwyr",
+                fileName = "GodotNodeTree",
+        )
+
+        file.run {
+            write(content.toByteArray())
+            close()
+        }
 
         return symbols.filter { !it.validate() }.toList()
     }
