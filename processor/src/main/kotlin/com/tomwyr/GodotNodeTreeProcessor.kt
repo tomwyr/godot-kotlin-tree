@@ -10,12 +10,11 @@ import com.google.devtools.ksp.validate
 import java.io.File
 
 class GodotNodeTreeProcessor(
-    private val logger: KSPLogger,
-    private val generator: CodeGenerator,
-    private val options: Map<String, String>,
+        private val logger: KSPLogger,
+        private val generator: CodeGenerator,
+        private val options: Map<String, String>,
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val godotProjectPath = options["godotProjectPath"]
 
         val symbols = resolver.getSymbolsWithAnnotation("com.tomwyr.GodotNodeTree")
         val symbol = symbols.firstOrNull() ?: return emptyList()
@@ -24,10 +23,11 @@ class GodotNodeTreeProcessor(
         symbolPath ?: throw UnknownAnnotationLocationException()
 
         val rootPath = symbolPath.split("/src/")
-            .takeIf { it.size > 1 }
-            ?.let { it.toMutableList().apply { removeLast() } }
-            ?.joinToString("")
+                .takeIf { it.size > 1 }
+                ?.let { it.toMutableList().apply { removeLast() } }
+                ?.joinToString("")
 
+        val godotProjectPath = options["godotProjectPath"]
         val godotProjectAbsolutePath = rootPath?.let {
             var path = it.removeSuffix("/")
             path += "/"
@@ -41,7 +41,18 @@ class GodotNodeTreeProcessor(
 
         val sceneFiles = File(godotProjectAbsolutePath).walkTopDown().filter { it.path.endsWith(".tscn") }
 
-        logger.warn(sceneFiles.joinToString { it.name })
+        val scenes = sceneFiles.map { file ->
+            val name = file.nameWithoutExtension
+            val nodes = SceneNodesParser(logger).parse(file.readText())
+            Scene(name, nodes)
+        }.toList()
+
+        scenes.forEach {
+            logger.warn("[${it.name}]")
+            logger.warn(it.nodes.joinToString("\n") { "${it.name} ${it.type}" })
+            logger.warn("\n")
+        }
+
 
         return symbols.filter { !it.validate() }.toList()
     }
