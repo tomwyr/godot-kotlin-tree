@@ -3,12 +3,13 @@ package com.tomwyr
 import com.google.devtools.ksp.processing.KSPLogger
 
 class SceneNodesParser(private val logger: KSPLogger) {
-    fun parse(projectFileContent: String): List<Node> {
+    fun parse(projectFileContent: String): Node {
         return projectFileContent
                 .let(::splitToNodeLines)
                 .map(::extractParamsLine)
                 .map(::parseParamsLine)
-                .mapNotNull(::createNodeEntry)
+                .mapNotNull(::createNodeParams)
+                .let(::createRootNode)
     }
 
     private fun splitToNodeLines(data: String): List<String> {
@@ -37,17 +38,49 @@ class SceneNodesParser(private val logger: KSPLogger) {
         return keyAndValue?.let { it[0] to it[1] }
     }
 
-    private fun createNodeEntry(params: Map<String, String>): Node? {
+    private fun createNodeParams(params: Map<String, String>): NodeParams? {
         val name = params["name"] ?: return null
         val type = params["type"] ?: return null
+        val parent = params["parent"]
 
-        val sanitize = { item: String ->            
+        val sanitize = { item: String ->
             if (!item.startsWith('\"') || !item.endsWith('\"')) {
                 throw UnexpectedNodeFormat(item)
             }
             item.trim('\"')
         }
 
-        return Node(sanitize(name), sanitize(type))
+        return NodeParams(
+                name = sanitize(name),
+                type = sanitize(type),
+                parent = parent?.let(sanitize),
+        )
+    }
+
+    private fun createRootNode(params: List<NodeParams>): Node {
+        val childrenByParent = params.groupBy { it.parent }
+        val rootParams = params.single { it.parent == null }
+        return rootParams.toNode(childrenByParent)
+    }
+}
+
+private data class NodeParams(
+        val name: String,
+        val type: String,
+        val parent: String?,
+) {
+
+    fun toNode(childrenByParent: Map<String?, List<NodeParams>>): Node {
+        val childrenKey = when (parent) {
+            null -> "."
+            "." -> name
+            else -> "$parent/$name"
+        }
+
+        val children = childrenByParent
+                .getOrDefault(childrenKey, emptyList())
+                .map { it.toNode(childrenByParent) }
+
+        return Node(name = name, type = type, children = children)
     }
 }

@@ -42,8 +42,8 @@ class GodotNodeTreeProcessor(
 
         val scenes = sceneFiles.map { file ->
             val name = file.nameWithoutExtension
-            val nodes = SceneNodesParser(logger).parse(file.readText())
-            Scene(name, nodes)
+            val root = SceneNodesParser(logger).parse(file.readText())
+            Scene(name, root)
         }.toList()
 
         val annotationPackage = symbolFile.packageName.asString()

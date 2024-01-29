@@ -1,5 +1,12 @@
 package com.tomwyr
 
-class Scene(val name: String, val nodes: List<Node>)
+data class Scene(
+        val name: String,
+        val root: Node,
+)
 
-class Node(val name: String, val type: String)
+data class Node(
+        val name: String,
+        val type: String,
+        val children: List<Node>,
+)
