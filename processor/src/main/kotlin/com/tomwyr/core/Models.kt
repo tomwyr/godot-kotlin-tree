@@ -1,4 +1,4 @@
-package com.tomwyr
+package com.tomwyr.core
 
 data class Scene(
         val name: String,

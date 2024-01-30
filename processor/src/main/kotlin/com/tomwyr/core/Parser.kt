@@ -1,4 +1,4 @@
-package com.tomwyr
+package com.tomwyr.core
 
 import com.google.devtools.ksp.processing.KSPLogger
 

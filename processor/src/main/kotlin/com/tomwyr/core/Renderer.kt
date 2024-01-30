@@ -1,4 +1,4 @@
-package com.tomwyr
+package com.tomwyr.core
 
 class NodeTreeRenderer {
     fun render(packageName: String, scenes: List<Scene>): String {

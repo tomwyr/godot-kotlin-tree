@@ -3,8 +3,10 @@ package com.tomwyr
 import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.validate
-import java.io.File
+import com.tomwyr.core.*
+import java.io.OutputStream
 
 class GodotNodeTreeProcessor(
         private val logger: KSPLogger,
@@ -14,53 +16,40 @@ class GodotNodeTreeProcessor(
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver.getSymbolsWithAnnotation("com.tomwyr.GodotNodeTree")
-        val symbol = symbols.firstOrNull() ?: return emptyList()
-        val symbolFile = symbol.containingFile ?: throw UnknownAnnotationLocationException()
+        if (!symbols.any()) return emptyList()
 
-        symbol.containingFile?.packageName?.asString().let {
-            println(it)
+        val symbolFile = symbols.first().containingFile ?: throw UnknownAnnotationLocationException()
+        generateTree(symbolFile)
+
+        return symbols.filter { !it.validate() }.toList()
+    }
+
+    private fun generateTree(symbolFile: KSFile) {
+        val rootPath = resolveRootPath(symbolFile.filePath)
+        val projectRelativePath = options["godotProjectPath"]
+        val targetPackage = symbolFile.packageName.asString()
+
+        val projectPath = getProjectPath(rootPath, projectRelativePath)
+
+        NodeTreeGenerator(
+                renderer = NodeTreeRenderer(),
+                parser = SceneNodesParser(logger),
+        ).generate(projectPath, targetPackage) {
+            createOutputFile(symbolFile)
         }
+    }
 
-        val rootPath = symbolFile.filePath.split("/src/")
-                .takeIf { it.size > 1 }
-                ?.let { it.toMutableList().apply { removeLast() } }
-                ?.joinToString("")
-
-        val godotProjectPath = options["godotProjectPath"]
-        val godotProjectAbsolutePath = rootPath?.let {
-            var path = it.removeSuffix("/")
-            path += "/"
-            if (godotProjectPath != null) {
-                path += godotProjectPath.removePrefix("/")
-            }
-            path
-        }.takeIf { dir -> File("$dir/project.godot").exists() }
-
-        godotProjectAbsolutePath ?: throw InvalidGodotProjectException()
-
-        val sceneFiles = File(godotProjectAbsolutePath).walkTopDown().filter { it.path.endsWith(".tscn") }
-
-        val scenes = sceneFiles.map { file ->
-            val name = file.nameWithoutExtension
-            val root = SceneNodesParser(logger).parse(file.readText())
-            Scene(name, root)
-        }.toList()
-
-        val annotationPackage = symbolFile.packageName.asString()
-
-        val content = NodeTreeRenderer().render(annotationPackage, scenes)
-
-        val file = generator.createNewFile(
+    private fun createOutputFile(symbolFile: KSFile): OutputStream {
+        return generator.createNewFile(
                 dependencies = Dependencies(false, symbolFile),
                 packageName = "com.tomwyr",
                 fileName = "GodotNodeTree",
         )
+    }
 
-        file.run {
-            write(content.toByteArray())
-            close()
-        }
-
-        return symbols.filter { !it.validate() }.toList()
+    private fun resolveRootPath(symbolPath: String): String {
+        return symbolPath.split("/src/").toMutableList()
+                .apply { removeLast() }
+                .joinToString("")
     }
 }

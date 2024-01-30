@@ -1,4 +1,4 @@
-package com.tomwyr
+package com.tomwyr.core
 
 class UnknownAnnotationLocationException : Exception("The location of GodotNodeTree annotation couldn't be resolved")
 
