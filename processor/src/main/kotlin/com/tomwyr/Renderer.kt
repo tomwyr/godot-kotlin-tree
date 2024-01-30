@@ -3,91 +3,74 @@ package com.tomwyr
 class NodeTreeRenderer {
     fun render(packageName: String, scenes: List<Scene>): String {
         val imports = """
-        |import godot.*
-        |import godot.core.NodePath
-        |import godot.global.GD
-        |import kotlin.reflect.KClass
-        """.trimMargin()
-
-        val treeExtension = """
-        |fun GD.Tree(node: Node): GDTree = nodeTree(node)
-        """.trimMargin()
-
-        val nodeExtension = """
-        |private inline fun <reified T : Node> Node.ref(path: String): T {
-        |    val node = getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
-        |    (node as? T) ?: throw NodeInvalidTypeException(T::class)
-        |    return node
-        |}
-        |
-        |class NodeNotFoundException(path: String) : Exception("Node not found under given path ${'$'}path")
-        |
-        |class NodeInvalidTypeException(type: KClass<*>) : Exception("Node is not an instance of ${'$'}{type.simpleName}")
-        """.trimMargin()
-
-        val sceneObjects = scenes.joinToString("\n\n") { scene ->
-            val nodes = scene.nodes.joinToString("\n") { node ->
-                """
-                |        override val ${node.name}: ${node.type} = node.ref("/root/${node.name}")
-                """.trimMargin()
-            }
-
-            """
-            |    override val ${scene.name} = object : ${scene.name}Tree {
-            |$nodes
-            |    }
-            """.trimMargin()
-        }
-        
-        val rootObject = """
-        |private fun nodeTree(node: Node): GDTree = object : GDTree {
-        |$sceneObjects
-        |}
-        """.trimMargin()
-
-        val rootInterface = run {
-            val nodes = scenes.joinToString("\n") { scene ->
-                """
-                |    val ${scene.name}: ${scene.name}Tree
-                """.trimMargin()
-            }
-
-            """
-            |interface GDTree {
-            |$nodes
-            |}
-            """.trimMargin()
-        }
-
-        val sceneInterfaces = scenes.joinToString("\n\n") { scene ->
-            val nodes = scene.nodes.joinToString("\n") { node ->
-                """
-                |    val ${node.name}: ${node.type}
-                """.trimIndent()
-            }
-
-            """
-            |interface ${scene.name}Tree {
-            |$nodes
-            |}
-            """.trimMargin()
-        }
-
-        return """
         |package $packageName
         |
+        |import godot.*
+        |import godot.core.NodePath
+        |import kotlin.reflect.KProperty
+        """.trimMargin()
+
+        val sceneTrees = scenes.map { renderNode(it.root, "/root") }.joinLines(spacing = 2).ident()
+
+        val nodeTree = """
+        |object GDTree {
+        |    $sceneTrees
+        |}
+        """.trimMargin()
+
+        val nodeRef = """
+        |open class NodeRef<T : Node>(
+        |        private val path: String,
+        |        private val type: String,
+        |) {
+        |    private lateinit var host: Node
+        |
+        |    private val reference by lazy {
+        |        val node = host.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
+        |        @Suppress("UNCHECKED_CAST")
+        |        (node as? T) ?: throw NodeInvalidTypeException(type)
+        |        node
+        |    }
+        |
+        |    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
+        |        host = thisRef
+        |        return reference
+        |    }
+        |}
+        |
+        |class NodeNotFoundException(expectedPath: String) : Exception("Node not found under given path ${'$'}expectedPath")
+        |
+        |class NodeInvalidTypeException(expectedType: String?) : Exception("Node is not an instance of ${'$'}expectedType")
+        """.trimMargin()
+
+        return """
         |$imports
         |
-        |$treeExtension
+        |$nodeTree
         |
-        |$nodeExtension
-        |
-        |$rootObject
-        |
-        |$rootInterface
-        |
-        |$sceneInterfaces
+        |$nodeRef
         |
         """.trimMargin()
     }
+
+    private fun renderNode(node: Node, parentPath: String): String {
+        return if (node.children.isNotEmpty()) {
+            val path = "$parentPath/${node.name}"
+            val children = node.children.map { renderNode(it, path) }.joinLines().ident()
+
+            """
+            |object ${node.name} : NodeRef<${node.type}>("$path", "${node.type}") {
+            |    $children
+            |}
+            """.trimMargin()
+        } else {
+            """
+            |val ${node.name} = NodeRef<${node.type}>("$parentPath/${node.name}", "${node.type}")
+            """.trimMargin()
+        }
+    }
 }
+
+private fun String.ident(times: Int = 1) = lineSequence().joinToString("\n" + "    ".repeat(times))
+
+private fun Iterable<String>.joinLines(spacing: Int = 1): String = joinToString("\n".repeat(spacing))
