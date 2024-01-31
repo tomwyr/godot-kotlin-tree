@@ -18,23 +18,17 @@ class NodeTreeRenderer {
         |}
         """.trimMargin()
 
+
         val nodeRef = """
         |open class NodeRef<T : Node>(
         |        private val path: String,
         |        private val type: String,
         |) {
-        |    private lateinit var host: Node
-        |
-        |    private val reference by lazy {
-        |        val node = host.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
+        |    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
+        |        val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
         |        @Suppress("UNCHECKED_CAST")
         |        (node as? T) ?: throw NodeInvalidTypeException(type)
-        |        node
-        |    }
-        |
-        |    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
-        |        host = thisRef
-        |        return reference
+        |        return node
         |    }
         |}
         |
