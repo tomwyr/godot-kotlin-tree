@@ -5,4 +5,4 @@ class UnknownAnnotationLocationException : Exception("The location of GodotNodeT
 class InvalidGodotProjectException :
         Exception("The project in which GodotNodeTree annotation was used isn't a valid Godot project directory")
 
-class UnexpectedNodeFormat(input: String) : Exception("A node group with unexpected format encountered: $input")
+class UnexpectedNodeFormat(input: String, element: String) : Exception("A node with unexpected $element format encountered: $input")

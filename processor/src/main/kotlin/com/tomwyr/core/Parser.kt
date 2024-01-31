@@ -1,10 +1,8 @@
 package com.tomwyr.core
 
-import com.google.devtools.ksp.processing.KSPLogger
-
-class SceneNodesParser(private val logger: KSPLogger) {
-    fun parse(projectFileContent: String): Node {
-        return projectFileContent
+class SceneNodesParser {
+    fun parse(sceneFileContent: String): Node {
+        return sceneFileContent
                 .let(::splitToNodeLines)
                 .map(::extractParamsLine)
                 .map(::parseParamsLine)
@@ -15,37 +13,43 @@ class SceneNodesParser(private val logger: KSPLogger) {
     private fun splitToNodeLines(data: String): List<String> {
         return data.split("\n").filter { line ->
             line.startsWith("[node") && line.endsWith("]")
-        }
+        }.also(Log::parsedSceneNodes)
     }
 
     private fun extractParamsLine(line: String): String {
-        logger.warn("Parsing $line")
+        Log.parsingNode(line)
         val nodePattern = "^\\[node(.*)]$".toRegex()
         val groups = nodePattern.find(line)?.groups?.filterNotNull() ?: emptyList()
         val paramsLine = groups.takeIf { it.size == 2 }?.last()?.value
-        return paramsLine ?: throw UnexpectedNodeFormat(line)
+        return paramsLine ?: throw UnexpectedNodeFormat(line, "entry")
     }
 
     private fun parseParamsLine(paramsLine: String): Map<String, String> {
-        val segments = paramsLine.replace("  ", " ").split(" ")
-        return segments.mapNotNull(::parseParamSegment).toMap()
+        val segments = paramsLine.trim().replace("  ", " ").split(" ")
+        return segments.associate(::parseParamSegment)
     }
 
-    private fun parseParamSegment(segment: String): Pair<String, String>? {
+    private fun parseParamSegment(segment: String): Pair<String, String> {
         val paramPattern = "^(.+)=(.+)$".toRegex()
         val groups = paramPattern.find(segment)?.groups?.filterNotNull() ?: emptyList()
-        val keyAndValue = groups.takeIf { it.size == 3 }?.drop(1)?.map { it.value }
-        return keyAndValue?.let { it[0] to it[1] }
+        val keyAndValue = groups.takeIf { it.size == 3 }
+        keyAndValue ?: throw UnexpectedNodeFormat(segment, "segment")
+        return keyAndValue.drop(1).map { it.value }.let { it[0] to it[1] }
     }
 
     private fun createNodeParams(params: Map<String, String>): NodeParams? {
-        val name = params["name"] ?: return null
-        val type = params["type"] ?: return null
+        val name = params["name"]
+        val type = params["type"]
         val parent = params["parent"]
+
+        if (name == null || type == null) {
+            Log.skippingNode()
+            return null
+        }
 
         val sanitize = { item: String ->
             if (!item.startsWith('\"') || !item.endsWith('\"')) {
-                throw UnexpectedNodeFormat(item)
+                throw UnexpectedNodeFormat(item, "value")
             }
             item.trim('\"')
         }
@@ -58,6 +62,7 @@ class SceneNodesParser(private val logger: KSPLogger) {
     }
 
     private fun createRootNode(params: List<NodeParams>): Node {
+        Log.creatingRootNode()
         val childrenByParent = params.groupBy { it.parent }
         val rootParams = params.single { it.parent == null }
         return rootParams.toNode(childrenByParent)

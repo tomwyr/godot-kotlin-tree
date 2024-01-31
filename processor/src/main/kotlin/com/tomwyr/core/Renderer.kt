@@ -10,7 +10,7 @@ class NodeTreeRenderer {
         |import kotlin.reflect.KProperty
         """.trimMargin()
 
-        val sceneTrees = scenes.map { renderNode(it.root, "/root") }.joinLines(spacing = 2).ident()
+        val sceneTrees = scenes.map { renderNode(it.root, "/root") }.joinLines(spacing = 2).indentLine()
 
         val nodeTree = """
         |object GDTree {
@@ -54,23 +54,25 @@ class NodeTreeRenderer {
     }
 
     private fun renderNode(node: Node, parentPath: String): String {
+        val nodePath = "$parentPath/${node.name}"
+        Log.renderingNode(node, nodePath)
+
         return if (node.children.isNotEmpty()) {
-            val path = "$parentPath/${node.name}"
-            val children = node.children.map { renderNode(it, path) }.joinLines().ident()
+            val children = node.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
 
             """
-            |object ${node.name} : NodeRef<${node.type}>("$path", "${node.type}") {
+            |object ${node.name} : NodeRef<${node.type}>("$nodePath", "${node.type}") {
             |    $children
             |}
             """.trimMargin()
         } else {
             """
-            |val ${node.name} = NodeRef<${node.type}>("$parentPath/${node.name}", "${node.type}")
+            |val ${node.name} = NodeRef<${node.type}>("$nodePath", "${node.type}")
             """.trimMargin()
         }
     }
 }
 
-private fun String.ident(times: Int = 1) = lineSequence().joinToString("\n" + "    ".repeat(times))
-
 private fun Iterable<String>.joinLines(spacing: Int = 1): String = joinToString("\n".repeat(spacing))
+
+private fun String.indentLine(times: Int = 1) = lineSequence().joinToString("\n" + "    ".repeat(times))

@@ -8,10 +8,9 @@ fun getProjectPath(rootPath: String, projectRelativePath: String?): String {
     if (projectRelativePath != null) {
         path += projectRelativePath.removePrefix("/")
     }
-    path = "$path/project.godot"
 
-    if (!File(path).exists()) {
-        throw InvalidGodotProjectException()
+    File("$path/project.godot").run {
+        if (!exists()) throw InvalidGodotProjectException()
     }
 
     return path
