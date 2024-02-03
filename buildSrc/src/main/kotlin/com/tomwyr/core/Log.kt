@@ -17,13 +17,12 @@ object Log : ProcessorLog, ParserLog, RendererLog, GeneratorLog, Logger {
 }
 
 interface ProcessorLog : Logger {
-    fun multipleSymbolsAnnotated() {
-        warn("More than a single annotation found in the project")
-        warn("Generating node tree for the first symbol found")
-    }
-
     fun kotlinProjectPath(rootPath: String) {
         info("Kotlin project found under $rootPath")
+    }
+
+    fun kotlinOutputPath(filePath: String) {
+        info("Generated code will be saved at $filePath")
     }
 
     fun godotCustomProjectPath(projectRelativePath: String) {
@@ -35,7 +34,7 @@ interface ProcessorLog : Logger {
     }
 
     fun targetPackage(targetPackage: String) {
-        info("Package for which the node tree will be generated identified as $targetPackage")
+        info("Package for which code will be generated identified as $targetPackage")
     }
 
     fun nodeTreeGenerated(stats: NodeTreeStats) {
