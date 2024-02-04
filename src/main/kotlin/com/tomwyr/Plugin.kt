@@ -4,12 +4,8 @@ import com.tomwyr.core.Log
 import com.tomwyr.core.Logger
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-
-open class GodotNodeTreeConfig(
-        var projectPath: String? = null,
-        var packageName: String? = null,
-)
 
 class GodotNodeTree : Plugin<Project> {
     override fun apply(project: Project) {
@@ -18,6 +14,11 @@ class GodotNodeTree : Plugin<Project> {
         addSourceSet(project)
     }
 }
+
+open class GodotNodeTreeConfig(
+    var projectPath: String? = null,
+    var packageName: String? = null,
+    )
 
 private fun initLog(project: Project) {
     val logger = project.logger
