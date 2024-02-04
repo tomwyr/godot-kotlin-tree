@@ -13,7 +13,8 @@ repositories {
 }
 
 godot {
-    registrationFileBaseDir.set(projectDir.resolve("gdj").also { it.mkdirs() })
+    registrationFileBaseDir.set(projectDir.resolve("dodge_the_creeps"))
+    isRegistrationFileHierarchyEnabled.set(false)
     isAndroidExportEnabled.set(false)
     d8ToolPath.set(File("${System.getenv("ANDROID_SDK_ROOT")}/build-tools/31.0.0/d8"))
     androidCompileSdkDir.set(File("${System.getenv("ANDROID_SDK_ROOT")}/platforms/android-30"))
@@ -24,7 +25,6 @@ godot {
 }
 
 godotNodeTree {
-    projectPath = "dodge_the_creeps"
     packageName = "com.example.game"
 }
 
