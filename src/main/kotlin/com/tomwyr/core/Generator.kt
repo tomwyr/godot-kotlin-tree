@@ -7,7 +7,7 @@ class NodeTreeGenerator(
         private val parser: SceneNodesParser = SceneNodesParser(),
         private val renderer: NodeTreeRenderer = NodeTreeRenderer(),
 ) {
-    fun generate(projectPath: String, targetPackage: String, createFile: () -> OutputStream): NodeTreeStats {
+    fun generate(projectPath: String, targetPackage: String?, createFile: () -> OutputStream): NodeTreeStats {
         Log.readingScenes()
         val scenes = readScenes(projectPath)
 

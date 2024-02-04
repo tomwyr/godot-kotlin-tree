@@ -4,7 +4,6 @@ import com.tomwyr.core.Log
 import com.tomwyr.core.Logger
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 class GodotNodeTree : Plugin<Project> {

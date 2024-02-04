@@ -9,8 +9,8 @@ import java.io.File
 import java.io.OutputStream
 
 fun generate(project: Project, config: GodotNodeTreeConfig) {
-    val targetPackage = config.packageName ?: ""
-    if (targetPackage.isNotEmpty()) {
+    val targetPackage = config.packageName
+    if (targetPackage != null) {
         Log.targetPackage(targetPackage)
     }
 

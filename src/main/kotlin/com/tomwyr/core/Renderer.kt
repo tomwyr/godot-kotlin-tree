@@ -1,10 +1,10 @@
 package com.tomwyr.core
 
 class NodeTreeRenderer {
-    fun render(packageName: String, scenes: List<Scene>): String {
+    fun render(packageName: String?, scenes: List<Scene>): String {
+        val `package` = packageName?.let { "package $it" }
+
         val imports = """
-        |package $packageName
-        |
         |import godot.*
         |import godot.core.NodePath
         |import kotlin.reflect.KProperty
@@ -37,14 +37,8 @@ class NodeTreeRenderer {
         |class NodeInvalidTypeException(expectedType: String?) : Exception("Node is not an instance of ${'$'}expectedType")
         """.trimMargin()
 
-        return """
-        |$imports
-        |
-        |$nodeTree
-        |
-        |$nodeRef
-        |
-        """.trimMargin()
+        return listOfNotNull(`package`, imports, nodeTree, nodeRef)
+                .joinLines(spacing = 2).plus("\n")
     }
 
     private fun renderNode(node: Node, parentPath: String): String {

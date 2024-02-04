@@ -20,14 +20,14 @@ fun getProjectPath(rootPath: String, relativePath: String?): String {
     return path
 }
 
-fun getOutputPath(rootPath: String, targetPackage: String): String {
+fun getOutputPath(rootPath: String, targetPackage: String?): String {
     val buildPath = "build/generated/godotNodeTree/kotlin".sysSepd
     val fileName = "GodotNodeTree.kt"
-    val packagePath = targetPackage.replace(".", sep)
+    val packagePath = targetPackage?.replace(".", sep)
 
     return StringBuffer().apply {
         append("$rootPath/$buildPath")
-        if (packagePath.isNotEmpty()) append("/$packagePath")
+        if (packagePath != null) append("/$packagePath")
         append("/$fileName")
     }.toString().sysSepd
 }
