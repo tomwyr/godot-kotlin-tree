@@ -15,9 +15,9 @@ class GodotNodeTree : Plugin<Project> {
 }
 
 open class GodotNodeTreeConfig(
-    var projectPath: String? = null,
-    var packageName: String? = null,
-    )
+        var projectPath: String? = null,
+        var packageName: String? = null,
+)
 
 private fun initLog(project: Project) {
     val logger = project.logger
