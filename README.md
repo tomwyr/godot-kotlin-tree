@@ -63,6 +63,8 @@ No additional setup of the Godot project is needed.
 
 Create a scene with nodes in Godot Editor and run `generateNodeTree` Gradle task:
 
+![image](https://github.com/tomwyr/godot-kotlin-tree/assets/9600796/5231f627-2db4-48e3-9b31-57eff7949f77)
+
 The task will scan your Godot project files and generate node tree representing the scene:
 
 ```kotlin
@@ -94,6 +96,8 @@ class ColorAnimator : Node2D() {
 ```
 
 Run project:
+
+https://github.com/tomwyr/godot-kotlin-tree/assets/9600796/61637bbc-103f-48d0-a2af-696e1931bf87
 
 ## Compatibility
 
