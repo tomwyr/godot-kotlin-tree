@@ -46,6 +46,15 @@ godotNodeTree {
 }
 ```
 
+Add plugin repository declaration to the `settings.gradle.kts` file:
+```kotlin
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+```
+
 ### Godot
 
 No additional setup of the Godot project is needed.
