@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.0" apply false
     id("com.utopia-rise.godot-kotlin-jvm") version "0.8.1-4.2.0"
-    id("com.tomwyr.godot-node-tree") version "1.0.0"
+    id("io.github.tomwyr.godot-node-tree") version "1.0.0"
 }
 
 kotlin {
