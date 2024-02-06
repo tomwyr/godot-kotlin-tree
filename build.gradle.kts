@@ -18,8 +18,8 @@ gradlePlugin {
 
     plugins {
         create("godot-node-tree") {
-            id = "com.tomwyr.godot-node-tree"
-            group = "com.tomwyr"
+            id = "io.github.tomwyr.godot-node-tree"
+            group = "io.github.tomwyr"
             version = "1.0.0"
             displayName = "Godot Kotlin Tree"
             description = "A type-safe Godot node tree representation in Kotlin."
