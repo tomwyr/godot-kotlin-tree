@@ -1,1 +1,1 @@
-rootProject.name = "godot-node-tree"
+rootProject.name = "godot-kotlin-tree"
