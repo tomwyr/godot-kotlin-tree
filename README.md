@@ -27,7 +27,7 @@ Configure plugin in the `build.gradle.kts` file:
 ```kotlin
 // Add plugin dependency
 plugins {
-  id("io.github.tomwyr.godot-node-tree") version "1.0.0"
+  id("io.github.tomwyr.godot-kotlin-tree") version "1.0.0"
 }
 
 // Include generated code in the project sources
