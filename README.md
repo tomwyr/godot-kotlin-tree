@@ -107,7 +107,7 @@ _Note: the end part of bindings version is also the compatible engine version._
 
 | godot-kotlin-tree | godot-kotlin-jvm |
 | ----------------- | ---------------- |
-| 1.0.0             | 0.8.1-4.2.0      |
+| 1.0.x             | 0.8.1-4.2.0      |
 
 Other pairs of versions may also work but their compatibility has never been tested and proper behavior of the plugin isn't guaranteed.
 

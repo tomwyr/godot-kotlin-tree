@@ -1,13 +1,13 @@
 import java.io.FileInputStream
 import java.util.*
 
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 group = "io.github.tomwyr"
 description = "A type-safe Godot node tree representation in Kotlin"
 
 plugins {
-    id("com.gradle.plugin-publish") version "1.2.1"
     kotlin("jvm") version "1.9.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
     `maven-publish`
     signing
 }
