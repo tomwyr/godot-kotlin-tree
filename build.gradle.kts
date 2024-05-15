@@ -25,10 +25,13 @@ gradlePlugin {
     website = "https://github.com/tomwyr/godot-kotlin-tree"
     vcsUrl = "https://github.com/tomwyr/godot-kotlin-tree.git"
 
+    setGradlePublishProperties()
+
     plugins {
         create("godot-kotlin-tree") {
             id = "io.github.tomwyr.godot-kotlin-tree"
             displayName = "Godot Kotlin Tree"
+            description = "A type-safe Godot node tree representation in Kotlin"
             tags = listOf("godot", "kotlin", "node", "tree")
             implementationClass = "com.tomwyr.GodotNodeTree"
         }
@@ -101,3 +104,15 @@ signing {
 
 val isSnapshot: Boolean
     get() = version.toString().endsWith("SNAPSHOT")
+
+fun setGradlePublishProperties() {
+    val properties = Properties().apply {
+        load(project.rootProject.file("local.properties").reader())
+    }
+    val bindProperty = { key: String ->
+        System.setProperty(key, properties.getProperty(key))
+    }
+
+    bindProperty("gradle.publish.key")
+    bindProperty("gradle.publish.secret")
+}
