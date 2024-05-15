@@ -37,11 +37,11 @@ interface ProcessorLog : Logger {
         info("Package for which code will be generated identified as $targetPackage")
     }
 
-    fun nodeTreeGenerated(stats: NodeTreeStats) {
+    fun nodeTreeGenerated(treeInfo: NodeTreeInfo) {
         info("Node tree generated successfully!")
-        info("Scenes number: ${stats.scenes}")
-        info("Nodes total: ${stats.nodes}")
-        info("Tree depth: ${stats.depth}")
+        info("Scenes number: ${treeInfo.scenes}")
+        info("Nodes total: ${treeInfo.nodes}")
+        info("Tree depth: ${treeInfo.depth}")
     }
 }
 
