@@ -28,12 +28,12 @@ fun generate(project: Project, config: GodotNodeTreeConfig) {
     val outputPath = getOutputPath(rootPath, targetPackage)
     Log.kotlinOutputPath(outputPath)
 
-    val stats = NodeTreeGenerator().generate(
+    val treeInfo = NodeTreeGenerator().generate(
             projectPath,
             targetPackage,
             createFile = { createOutputFile(outputPath) },
     )
-    Log.nodeTreeGenerated(stats)
+    Log.nodeTreeGenerated(treeInfo)
 }
 
 private fun createOutputFile(dirPath: String): OutputStream {
