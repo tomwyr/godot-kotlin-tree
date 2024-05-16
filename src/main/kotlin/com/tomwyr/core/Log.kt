@@ -1,7 +1,5 @@
 package com.tomwyr.core
 
-import java.io.File
-
 interface Logger {
     fun debug(message: String)
     fun info(message: String)
@@ -74,12 +72,12 @@ interface GeneratorLog : Logger {
         info("Reading scenes from the Godot project")
     }
 
-    fun scenesFound(sceneFiles: List<File>) {
-        info("${sceneFiles.size} scene files found")
+    fun scenesFound(scenes: List<SceneData>) {
+        info("${scenes.size} scene files found")
     }
 
-    fun parsingScene(file: File) {
-        info("Parsing scene ${file.name}")
+    fun parsingScene(scene: SceneData) {
+        info("Parsing scene ${scene.name}")
     }
 
     fun renderingNodeTree() {
