@@ -1,14 +1,15 @@
 package com.tomwyr
 
-import com.tomwyr.core.Log
-import com.tomwyr.core.NodeTreeGenerator
-import com.tomwyr.core.getOutputPath
-import com.tomwyr.core.getProjectPath
+import com.tomwyr.core.*
 import org.gradle.api.Project
-import java.io.File
-import java.io.OutputStream
 
 fun generate(project: Project, config: GodotNodeTreeConfig) {
+    val godotProject = getGodotProject(project, config)
+    val treeInfo = NodeTreeGenerator().generate(godotProject)
+    Log.nodeTreeGenerated(treeInfo)
+}
+
+private fun getGodotProject(project: Project, config: GodotNodeTreeConfig): GodotKotlinProject {
     val targetPackage = config.packageName
     if (targetPackage != null) {
         Log.targetPackage(targetPackage)
@@ -28,18 +29,5 @@ fun generate(project: Project, config: GodotNodeTreeConfig) {
     val outputPath = getOutputPath(rootPath, targetPackage)
     Log.kotlinOutputPath(outputPath)
 
-    val treeInfo = NodeTreeGenerator().generate(
-            projectPath,
-            targetPackage,
-            createFile = { createOutputFile(outputPath) },
-    )
-    Log.nodeTreeGenerated(treeInfo)
-}
-
-private fun createOutputFile(dirPath: String): OutputStream {
-    return File(dirPath).run {
-        parentFile.mkdirs()
-        createNewFile()
-        outputStream()
-    }
+    return GodotKotlinProject(projectPath, outputPath, targetPackage)
 }
