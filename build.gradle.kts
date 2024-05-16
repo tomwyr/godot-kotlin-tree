@@ -5,6 +5,10 @@ version = "1.0.0"
 group = "io.github.tomwyr"
 description = "A type-safe Godot node tree representation in Kotlin"
 
+val localProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("local.properties")))
+}
+
 plugins {
     kotlin("jvm") version "1.9.0"
     id("com.gradle.plugin-publish") version "1.2.1"
@@ -26,7 +30,9 @@ gradlePlugin {
     website = "https://github.com/tomwyr/godot-kotlin-tree"
     vcsUrl = "https://github.com/tomwyr/godot-kotlin-tree.git"
 
-    setGradlePublishProperties()
+    for (key in listOf("gradle.publish.key", "gradle.publish.secret")) {
+        System.setProperty(key, localProperties[key] as String)
+    }
 
     plugins {
         create("godot-kotlin-tree") {
@@ -42,10 +48,6 @@ gradlePlugin {
 java {
     withJavadocJar()
     withSourcesJar()
-}
-
-val localProperties = Properties().apply {
-    load(FileInputStream(rootProject.file("local.properties")))
 }
 
 publishing {
@@ -105,15 +107,3 @@ signing {
 
 val isSnapshot: Boolean
     get() = version.toString().endsWith("SNAPSHOT")
-
-fun setGradlePublishProperties() {
-    val properties = Properties().apply {
-        load(project.rootProject.file("local.properties").reader())
-    }
-    val bindProperty = { key: String ->
-        System.setProperty(key, properties.getProperty(key))
-    }
-
-    bindProperty("gradle.publish.key")
-    bindProperty("gradle.publish.secret")
-}
