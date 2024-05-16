@@ -1,0 +1,56 @@
+package com.example.game
+
+import godot.*
+import godot.core.NodePath
+import kotlin.reflect.KProperty
+
+object GDTree {
+    object HUD : NodeRef<CanvasLayer>("/root/HUD", "CanvasLayer") {
+        val ScoreLabel = NodeRef<Label>("/root/HUD/ScoreLabel", "Label")
+        val MessageLabel = NodeRef<Label>("/root/HUD/MessageLabel", "Label")
+        val StartButton = NodeRef<Button>("/root/HUD/StartButton", "Button")
+        val MessageTimer = NodeRef<Timer>("/root/HUD/MessageTimer", "Timer")
+    }
+    
+    object Main : NodeRef<Node>("/root/Main", "Node") {
+        val ColorRect = NodeRef<ColorRect>("/root/Main/ColorRect", "ColorRect")
+        val MobTimer = NodeRef<Timer>("/root/Main/MobTimer", "Timer")
+        val ScoreTimer = NodeRef<Timer>("/root/Main/ScoreTimer", "Timer")
+        val StartTimer = NodeRef<Timer>("/root/Main/StartTimer", "Timer")
+        val StartPosition = NodeRef<Marker2D>("/root/Main/StartPosition", "Marker2D")
+        object MobPath : NodeRef<Path2D>("/root/Main/MobPath", "Path2D") {
+            val MobSpawnLocation = NodeRef<PathFollow2D>("/root/Main/MobPath/MobSpawnLocation", "PathFollow2D")
+        }
+        val Music = NodeRef<AudioStreamPlayer>("/root/Main/Music", "AudioStreamPlayer")
+        val DeathSound = NodeRef<AudioStreamPlayer>("/root/Main/DeathSound", "AudioStreamPlayer")
+        val ColorAnimator = NodeRef<Node2D>("/root/Main/ColorAnimator", "Node2D")
+    }
+    
+    object Mob : NodeRef<RigidBody2D>("/root/Mob", "RigidBody2D") {
+        val AnimatedSprite2D = NodeRef<AnimatedSprite2D>("/root/Mob/AnimatedSprite2D", "AnimatedSprite2D")
+        val CollisionShape2D = NodeRef<CollisionShape2D>("/root/Mob/CollisionShape2D", "CollisionShape2D")
+        val VisibleOnScreenNotifier2D = NodeRef<VisibleOnScreenNotifier2D>("/root/Mob/VisibleOnScreenNotifier2D", "VisibleOnScreenNotifier2D")
+    }
+    
+    object Player : NodeRef<Area2D>("/root/Player", "Area2D") {
+        val AnimatedSprite2D = NodeRef<AnimatedSprite2D>("/root/Player/AnimatedSprite2D", "AnimatedSprite2D")
+        val CollisionShape2D = NodeRef<CollisionShape2D>("/root/Player/CollisionShape2D", "CollisionShape2D")
+        val Trail = NodeRef<GPUParticles2D>("/root/Player/Trail", "GPUParticles2D")
+    }
+}
+
+open class NodeRef<T : Node>(
+        private val path: String,
+        private val type: String,
+) {
+    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
+        val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
+        @Suppress("UNCHECKED_CAST")
+        (node as? T) ?: throw NodeInvalidTypeException(type)
+        return node
+    }
+}
+
+class NodeNotFoundException(expectedPath: String) : Exception("Node not found under given path $expectedPath")
+
+class NodeInvalidTypeException(expectedType: String?) : Exception("Node is not an instance of $expectedType")
