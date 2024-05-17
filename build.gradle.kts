@@ -1,3 +1,6 @@
+import com.adarshr.gradle.testlogger.TestLoggerExtension
+import com.adarshr.gradle.testlogger.theme.ThemeType
+
 version = "1.0.0"
 group = "io.github.tomwyr"
 description = "A type-safe Godot node tree representation in Kotlin"
@@ -5,6 +8,7 @@ description = "A type-safe Godot node tree representation in Kotlin"
 plugins {
     kotlin("jvm") version "1.9.20"
     id("com.gradle.plugin-publish") version "1.2.1"
+    id("com.adarshr.test-logger") version "4.0.0"
     `maven-publish`
     signing
 }
@@ -16,6 +20,11 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
     testImplementation(kotlin("test"))
+}
+
+configure<TestLoggerExtension> {
+    theme = ThemeType.MOCHA
+    showCauses = true
 }
 
 @Suppress("UnstableApiUsage")
@@ -100,7 +109,7 @@ signing {
 val isSnapshot: Boolean
     get() = version.toString().endsWith("SNAPSHOT")
 
-fun env(key: String) = System.getenv(key)
+fun env(key: String): String? = System.getenv(key)
 
 fun envToProp(envKey: String, propKey: String, defaultValue: String = "") {
     System.setProperty(propKey, System.getenv(envKey) ?: defaultValue)
