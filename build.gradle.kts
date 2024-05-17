@@ -1,16 +1,9 @@
-import java.io.FileInputStream
-import java.util.*
-
 version = "1.0.0"
 group = "io.github.tomwyr"
 description = "A type-safe Godot node tree representation in Kotlin"
 
-val localProperties = Properties().apply {
-    load(FileInputStream(rootProject.file("local.properties")))
-}
-
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.20"
     id("com.gradle.plugin-publish") version "1.2.1"
     `maven-publish`
     signing
@@ -30,9 +23,8 @@ gradlePlugin {
     website = "https://github.com/tomwyr/godot-kotlin-tree"
     vcsUrl = "https://github.com/tomwyr/godot-kotlin-tree.git"
 
-    for (key in listOf("gradle.publish.key", "gradle.publish.secret")) {
-        System.setProperty(key, localProperties[key] as String)
-    }
+    envToProp("GRADLE_PUBLISH_KEY", "gradle.publish.key")
+    envToProp("GRADLE_PUBLISH_SECRET", "gradle.publish.secret")
 
     plugins {
         create("godot-kotlin-tree") {
@@ -91,19 +83,25 @@ publishing {
             url = uri(if (isSnapshot) snapshotsRepoUrl else releasesRepoUrl)
 
             credentials {
-                username = localProperties["maven.repo.username"] as String
-                password = localProperties["maven.repo.password"] as String
+                username = env("MAVEN_REPO_USERNAME")
+                password = env("MAVEN_REPO_PASSWORD")
             }
         }
     }
 }
 
 signing {
-    val signingKey = localProperties["maven.signing.key"] as String
-    val signingPassword = localProperties["maven.signing.password"] as String
+    val signingKey = env("MAVEN_SIGNING_KEY")
+    val signingPassword = env("MAVEN_SIGNING_PASSWORD")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["plugin"])
 }
 
 val isSnapshot: Boolean
     get() = version.toString().endsWith("SNAPSHOT")
+
+fun env(key: String) = System.getenv(key)
+
+fun envToProp(envKey: String, propKey: String, defaultValue: String = "") {
+    System.setProperty(propKey, System.getenv(envKey) ?: defaultValue)
+}
