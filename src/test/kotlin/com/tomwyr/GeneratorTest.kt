@@ -7,7 +7,8 @@ import com.tomwyr.core.NodeTreeGenerator
 import java.io.File
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
+import kotlin.test.fail
 
 
 class GeneratorTest {
@@ -27,10 +28,13 @@ class GeneratorTest {
 }
 
 fun test(testCase: String, targetPackage: String) {
-    val project = setUpTestProject(testCase, targetPackage)
-    NodeTreeGenerator().generate(project)
-    assertGeneratorResult(testCase)
-    postCleanUp(testCase)
+    try {
+        val project = setUpTestProject(testCase, targetPackage)
+        NodeTreeGenerator().generate(project)
+        assertOutputsEqual(testCase)
+    } finally {
+        cleanUpGeneratedOutput(testCase)
+    }
 }
 
 const val basePath = "src/test/resources/"
@@ -43,12 +47,14 @@ fun setUpTestProject(testCase: String, targetPackage: String): GodotKotlinProjec
     )
 }
 
-fun assertGeneratorResult(testCase: String) {
-    val expected = File("$basePath/$testCase/output/Expected").readBytes()
-    val actual = File("$basePath/$testCase/output/Actual").readBytes()
-    assertContentEquals(expected, actual)
+fun assertOutputsEqual(testCase: String) {
+    val expected = File("$basePath/$testCase/output/Expected").readText(Charsets.UTF_8)
+    val actual = File("$basePath/$testCase/output/Actual").readText(Charsets.UTF_8)
+    assertEquals(expected, actual)
 }
 
-fun postCleanUp(testCase: String) {
-    File("$basePath/$testCase/output/Actual").delete()
+fun cleanUpGeneratedOutput(testCase: String) {
+    File("$basePath/$testCase/output/Actual").run {
+        if (exists()) delete()
+    }
 }

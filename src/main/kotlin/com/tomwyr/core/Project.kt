@@ -13,6 +13,7 @@ class GodotKotlinProject(
         return File(projectPath).walkTopDown()
             .filter { it.path.endsWith(".tscn") }
             .map { SceneData(it.nameWithoutExtension, it.readText()) }
+            .sortedBy { it.name }
             .toList()
     }
 
