@@ -1,0 +1,30 @@
+package com.simple.game
+
+import godot.*
+import godot.core.NodePath
+import kotlin.reflect.KProperty
+
+object GDTree {
+    object Root : NodeRef<GridContainer>("/root/Root", "GridContainer") {
+        val KotlinGDJ = NodeRef<Label>("/root/Root/Kotlin GDJ", "Label")
+        val JavaGDJ = NodeRef<Label>("/root/Root/Java GDJ", "Label")
+        val KotlinSource = NodeRef<Label>("/root/Root/Kotlin source", "Label")
+        val JavaSource = NodeRef<Label>("/root/Root/Java source", "Label")
+    }
+}
+
+open class NodeRef<T : Node>(
+        private val path: String,
+        private val type: String,
+) {
+    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
+        val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
+        @Suppress("UNCHECKED_CAST")
+        (node as? T) ?: throw NodeInvalidTypeException(type)
+        return node
+    }
+}
+
+class NodeNotFoundException(expectedPath: String) : Exception("Node not found under given path $expectedPath")
+
+class NodeInvalidTypeException(expectedType: String?) : Exception("Node is not an instance of $expectedType")

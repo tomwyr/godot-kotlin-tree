@@ -18,14 +18,15 @@ class SceneNodesParser {
 
     private fun extractParamsLine(line: String): String {
         Log.parsingNode(line)
-        val nodePattern = "^\\[node(.*)]$".toRegex()
+        val nodePattern = "^\\[node (.*)]$".toRegex()
         val groups = nodePattern.find(line)?.groups?.filterNotNull() ?: emptyList()
         val paramsLine = groups.takeIf { it.size == 2 }?.last()?.value
         return paramsLine ?: throw UnexpectedNodeFormat(line, "entry")
     }
 
     private fun parseParamsLine(paramsLine: String): Map<String, String> {
-        val segments = paramsLine.trim().replace("  ", " ").split(" ")
+        val paramPattern = "\\w+=\".+?\"".toRegex()
+        val segments = paramPattern.findAll(paramsLine).map { it.value }.toList()
         return segments.associate(::parseParamSegment)
     }
 
