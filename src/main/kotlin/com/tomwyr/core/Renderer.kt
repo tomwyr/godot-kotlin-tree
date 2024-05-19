@@ -1,5 +1,7 @@
 package com.tomwyr.core
 
+import org.gradle.configurationcache.extensions.capitalized
+
 class NodeTreeRenderer {
     fun render(packageName: String?, scenes: List<Scene>): String {
         val `package` = packageName?.let { "package $it" }
@@ -43,19 +45,24 @@ class NodeTreeRenderer {
 
     private fun renderNode(node: Node, parentPath: String): String {
         val nodePath = "$parentPath/${node.name}"
+        val symbolName = node.name
+            .split("\\s+".toRegex())
+            .mapIndexed { index: Int, s: String -> if (index == 0) s else s.capitalized() }
+            .joinToString("")
+
         Log.renderingNode(node, nodePath)
 
         return if (node.children.isNotEmpty()) {
             val children = node.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
 
             """
-            |object ${node.name} : NodeRef<${node.type}>("$nodePath", "${node.type}") {
+            |object $symbolName : NodeRef<${node.type}>("$nodePath", "${node.type}") {
             |    $children
             |}
             """.trimMargin()
         } else {
             """
-            |val ${node.name} = NodeRef<${node.type}>("$nodePath", "${node.type}")
+            |val $symbolName = NodeRef<${node.type}>("$nodePath", "${node.type}")
             """.trimMargin()
         }
     }

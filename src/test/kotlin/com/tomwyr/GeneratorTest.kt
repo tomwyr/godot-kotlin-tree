@@ -8,10 +8,13 @@ import java.io.File
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
-
 
 class GeneratorTest {
+    @Test
+    fun `generates expected output for simple project`() {
+        test("simple", "com.simple.game")
+    }
+
     @Test
     fun `generates expected output for the example project`() {
         test("example", "com.example.game")
