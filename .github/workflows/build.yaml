@@ -21,6 +21,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
+    - name: Create properties from environment
+      run: sh scripts/create-properties.sh
+
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
@@ -53,6 +56,9 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
+
+    - name: Create properties from environment
+      run: sh scripts/create-properties.sh
 
     # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md

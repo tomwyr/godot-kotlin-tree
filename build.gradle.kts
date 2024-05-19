@@ -1,5 +1,9 @@
 import com.adarshr.gradle.testlogger.TestLoggerExtension
 import com.adarshr.gradle.testlogger.theme.ThemeType
+import java.io.FileInputStream
+import java.util.*
+
+val localProperties = loadLocalProps()
 
 version = "1.0.0"
 group = "io.github.tomwyr"
@@ -32,8 +36,9 @@ gradlePlugin {
     website = "https://github.com/tomwyr/godot-kotlin-tree"
     vcsUrl = "https://github.com/tomwyr/godot-kotlin-tree.git"
 
-    envToProp("GRADLE_PUBLISH_KEY", "gradle.publish.key")
-    envToProp("GRADLE_PUBLISH_SECRET", "gradle.publish.secret")
+    fun bindProp(key: String) = System.setProperty(key, prop(key))
+    bindProp("gradle.publish.key")
+    bindProp("gradle.publish.secret")
 
     plugins {
         create("godot-kotlin-tree") {
@@ -92,16 +97,17 @@ publishing {
             url = uri(if (isSnapshot) snapshotsRepoUrl else releasesRepoUrl)
 
             credentials {
-                username = env("MAVEN_REPO_USERNAME")
-                password = env("MAVEN_REPO_PASSWORD")
+                username = prop("maven.repo.username")
+                password = prop("maven.repo.password")
             }
         }
     }
 }
 
 signing {
-    val signingKey = env("MAVEN_SIGNING_KEY")
-    val signingPassword = env("MAVEN_SIGNING_PASSWORD")
+    isRequired = true
+    val signingKey = prop("maven.signing.key").replace("\\n", "\n")
+    val signingPassword = prop("maven.signing.password")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["plugin"])
 }
@@ -109,8 +115,10 @@ signing {
 val isSnapshot: Boolean
     get() = version.toString().endsWith("SNAPSHOT")
 
-fun env(key: String): String? = System.getenv(key)
+fun loadLocalProps() = Properties().apply {
+    load(FileInputStream(rootProject.file("local.properties")))
+}
 
-fun envToProp(envKey: String, propKey: String, defaultValue: String = "") {
-    System.setProperty(propKey, System.getenv(envKey) ?: defaultValue)
+fun prop(key: String): String {
+    return localProperties[key] as? String ?: throw Exception("Expected local property $key not set")
 }
