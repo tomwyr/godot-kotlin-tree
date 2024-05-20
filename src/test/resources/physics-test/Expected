@@ -1,0 +1,42 @@
+package com.physics.test
+
+import godot.*
+import godot.core.NodePath
+import kotlin.reflect.KProperty
+
+object GDTree {
+    object Main : NodeRef<Control>("/root/Main", "Control") {
+        val TestsMenu = NodeRef<MenuButton>("/root/Main/TestsMenu", "MenuButton")
+        val LabelControls = NodeRef<Label>("/root/Main/LabelControls", "Label")
+        val LabelFPS = NodeRef<Label>("/root/Main/LabelFPS", "Label")
+        val LabelEngine = NodeRef<Label>("/root/Main/LabelEngine", "Label")
+        val LabelVersion = NodeRef<Label>("/root/Main/LabelVersion", "Label")
+        val LabelTest = NodeRef<Label>("/root/Main/LabelTest", "Label")
+        val LabelPause = NodeRef<Label>("/root/Main/LabelPause", "Label")
+        object PanelLog : NodeRef<Panel>("/root/Main/PanelLog", "Panel") {
+            val ButtonClear = NodeRef<Button>("/root/Main/PanelLog/ButtonClear", "Button")
+            val CheckBoxScroll = NodeRef<CheckButton>("/root/Main/PanelLog/CheckBoxScroll", "CheckButton")
+            object ScrollLog : NodeRef<ScrollContainer>("/root/Main/PanelLog/ScrollLog", "ScrollContainer") {
+                object VBoxLog : NodeRef<VBoxContainer>("/root/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer") {
+                    val LabelLog = NodeRef<Label>("/root/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
+                }
+            }
+        }
+    }
+}
+
+open class NodeRef<T : Node>(
+        private val path: String,
+        private val type: String,
+) {
+    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
+        val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
+        @Suppress("UNCHECKED_CAST")
+        (node as? T) ?: throw NodeInvalidTypeException(type)
+        return node
+    }
+}
+
+class NodeNotFoundException(expectedPath: String) : Exception("Node not found under given path $expectedPath")
+
+class NodeInvalidTypeException(expectedType: String?) : Exception("Node is not an instance of $expectedType")
