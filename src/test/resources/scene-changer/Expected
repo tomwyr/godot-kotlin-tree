@@ -1,0 +1,33 @@
+package com.scenes.changer
+
+import godot.*
+import godot.core.NodePath
+import kotlin.reflect.KProperty
+
+object GDTree {
+    object SceneA : NodeRef<Panel>("/root/SceneA", "Panel") {
+        val Label = NodeRef<Label>("/root/SceneA/Label", "Label")
+        val GoToScene = NodeRef<Button>("/root/SceneA/GoToScene", "Button")
+    }
+    
+    object SceneB : NodeRef<Panel>("/root/SceneB", "Panel") {
+        val Label = NodeRef<Label>("/root/SceneB/Label", "Label")
+        val GoToScene = NodeRef<Button>("/root/SceneB/GoToScene", "Button")
+    }
+}
+
+open class NodeRef<T : Node>(
+        private val path: String,
+        private val type: String,
+) {
+    operator fun getValue(thisRef: Node, property: KProperty<*>): T {
+        val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
+        @Suppress("UNCHECKED_CAST")
+        (node as? T) ?: throw NodeInvalidTypeException(type)
+        return node
+    }
+}
+
+class NodeNotFoundException(expectedPath: String) : Exception("Node not found under given path $expectedPath")
+
+class NodeInvalidTypeException(expectedType: String?) : Exception("Node is not an instance of $expectedType")
