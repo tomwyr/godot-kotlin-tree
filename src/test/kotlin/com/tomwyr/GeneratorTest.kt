@@ -26,6 +26,11 @@ class GeneratorTest {
     }
 
     @Test
+    fun `scene with nested scenes`() {
+        test("waypoints", "com.waypoints.test")
+    }
+
+    @Test
     fun `multiple scenes`() {
         test("dodge-the-creeps", "com.example.game")
     }
