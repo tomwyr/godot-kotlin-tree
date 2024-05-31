@@ -56,6 +56,18 @@ interface ParserLog : Logger {
         info("Skipping node missing at least one of the required keys")
     }
 
+    fun parsedSceneResources(resources: List<String>) {
+        info("${resources.size} scene resources found in the scene")
+    }
+
+    fun parsingSceneResource(line: String) {
+        debug("Parsing scene resource $line")
+    }
+
+    fun skippingResource() {
+        info("Skipping resource missing at least one of the required keys")
+    }
+
     fun creatingRootNode() {
         info("Creating node tree structure for the extracted nodes")
     }
@@ -63,7 +75,10 @@ interface ParserLog : Logger {
 
 interface RendererLog : Logger {
     fun renderingNode(node: Node, nodePath: String) {
-        debug("Rendering $nodePath node of type ${node.type}")
+        when (node) {
+            is SceneNode -> debug("Rendering $nodePath node of type ${node.type}")
+            is NestedScene -> debug("Rendering $nodePath nested scene ${node.scene}")
+        }
     }
 }
 

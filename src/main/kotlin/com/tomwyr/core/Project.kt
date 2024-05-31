@@ -12,7 +12,7 @@ class GodotKotlinProject(
     fun readScenes(): List<SceneData> {
         return File(projectPath).walkTopDown()
             .filter { it.path.endsWith(".tscn") }
-            .map { SceneData(it.nameWithoutExtension, it.readText()) }
+            .map { SceneData(it.nameWithoutExtension.capitalize(), it.readText()) }
             .sortedBy { it.name }
             .toList()
     }

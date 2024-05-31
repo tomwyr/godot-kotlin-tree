@@ -1,23 +1,38 @@
 package com.tomwyr.core
 
 data class Scene(
-        val name: String,
-        val root: Node,
+    val name: String,
+    val root: Node,
 ) {
     val nodesCount: Int = root.flatten().size
     val nodesDepth: Int = root.longestPath().size
 }
 
-data class Node(
-        val name: String,
-        val type: String,
-        val children: List<Node>,
-) {
-    fun flatten(): List<Node> {
+sealed class Node {
+    abstract val name: String
+    abstract fun flatten(): List<Node>
+    abstract fun longestPath(): List<Node>
+}
+
+data class SceneNode(
+    override val name: String,
+    val type: String,
+    val children: List<Node>,
+) : Node() {
+    override fun flatten(): List<Node> {
         return children.flatMap { it.flatten() } + this
     }
 
-    fun longestPath(): List<Node> {
+    override fun longestPath(): List<Node> {
         return children.map { it.longestPath() }.maxByOrNull { it.size }.orEmpty() + this
     }
+}
+
+data class NestedScene(
+    override val name: String,
+    val scene: String,
+) : Node() {
+    override fun flatten(): List<Node> = listOf(this)
+
+    override fun longestPath(): List<Node> = listOf(this)
 }

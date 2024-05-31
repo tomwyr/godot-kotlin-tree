@@ -32,7 +32,7 @@ fun getOutputPath(rootPath: String, targetPackage: String?): String {
     }.toString().sysSepd
 }
 
-val String.sysSepd: String
+private val String.sysSepd: String
     get() = replace("/", sep)
 
 private val sep = FileSystems.getDefault().separator
