@@ -5,21 +5,23 @@ import godot.core.NodePath
 import kotlin.reflect.KProperty
 
 object GDTree {
-    object Main : NodeRef<Control>("/root/Main", "Control") {
-        val TestsMenu = NodeRef<MenuButton>("/root/Main/TestsMenu", "MenuButton")
-        val LabelControls = NodeRef<Label>("/root/Main/LabelControls", "Label")
-        val LabelFPS = NodeRef<Label>("/root/Main/LabelFPS", "Label")
-        val LabelEngine = NodeRef<Label>("/root/Main/LabelEngine", "Label")
-        val LabelVersion = NodeRef<Label>("/root/Main/LabelVersion", "Label")
-        val LabelTest = NodeRef<Label>("/root/Main/LabelTest", "Label")
-        val LabelPause = NodeRef<Label>("/root/Main/LabelPause", "Label")
-        object PanelLog : NodeRef<Panel>("/root/Main/PanelLog", "Panel") {
-            val ButtonClear = NodeRef<Button>("/root/Main/PanelLog/ButtonClear", "Button")
-            val CheckBoxScroll = NodeRef<CheckButton>("/root/Main/PanelLog/CheckBoxScroll", "CheckButton")
-            object ScrollLog : NodeRef<ScrollContainer>("/root/Main/PanelLog/ScrollLog", "ScrollContainer") {
-                object VBoxLog : NodeRef<VBoxContainer>("/root/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer") {
-                    val LabelLog = NodeRef<Label>("/root/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
-                }
+    val Main = MainScene("/root")
+}
+
+class MainScene(path: String) : NodeRef<Control>("$path/Main", "Control") {
+    val TestsMenu = NodeRef<MenuButton>("$path/Main/TestsMenu", "MenuButton")
+    val LabelControls = NodeRef<Label>("$path/Main/LabelControls", "Label")
+    val LabelFPS = NodeRef<Label>("$path/Main/LabelFPS", "Label")
+    val LabelEngine = NodeRef<Label>("$path/Main/LabelEngine", "Label")
+    val LabelVersion = NodeRef<Label>("$path/Main/LabelVersion", "Label")
+    val LabelTest = NodeRef<Label>("$path/Main/LabelTest", "Label")
+    val LabelPause = NodeRef<Label>("$path/Main/LabelPause", "Label")
+    object PanelLog : NodeRef<Panel>("$path/Main/PanelLog", "Panel") {
+        val ButtonClear = NodeRef<Button>("$path/Main/PanelLog/ButtonClear", "Button")
+        val CheckBoxScroll = NodeRef<CheckButton>("$path/Main/PanelLog/CheckBoxScroll", "CheckButton")
+        object ScrollLog : NodeRef<ScrollContainer>("$path/Main/PanelLog/ScrollLog", "ScrollContainer") {
+            object VBoxLog : NodeRef<VBoxContainer>("$path/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer") {
+                val LabelLog = NodeRef<Label>("$path/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
             }
         }
     }
