@@ -25,7 +25,7 @@ class MainScene(path: String) : NodeRef<Node>("$path/Main", "Node") {
     val ScoreTimer = NodeRef<Timer>("$path/Main/ScoreTimer", "Timer")
     val StartTimer = NodeRef<Timer>("$path/Main/StartTimer", "Timer")
     val StartPosition = NodeRef<Marker2D>("$path/Main/StartPosition", "Marker2D")
-    object MobPath : NodeRef<Path2D>("$path/Main/MobPath", "Path2D") {
+    val MobPath = object : NodeRef<Path2D>("$path/Main/MobPath", "Path2D") {
         val MobSpawnLocation = NodeRef<PathFollow2D>("$path/Main/MobPath/MobSpawnLocation", "PathFollow2D")
     }
     val HUD = HUDScene("$path/Main/HUD")
