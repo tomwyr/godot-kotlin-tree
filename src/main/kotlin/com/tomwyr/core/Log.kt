@@ -1,5 +1,7 @@
 package com.tomwyr.core
 
+import com.tomwyr.utils.SceneData
+
 interface Logger {
     fun debug(message: String)
     fun info(message: String)
@@ -64,8 +66,8 @@ interface ParserLog : Logger {
         debug("Parsing scene resource $line")
     }
 
-    fun skippingResource() {
-        info("Skipping resource missing at least one of the required keys")
+    fun skippingSceneResource() {
+        info("Skipping scene resource missing at least one of the required keys")
     }
 
     fun creatingRootNode() {

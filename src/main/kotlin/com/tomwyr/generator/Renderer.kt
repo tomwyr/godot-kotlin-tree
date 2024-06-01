@@ -1,4 +1,8 @@
-package com.tomwyr.core
+package com.tomwyr.generator
+
+import com.tomwyr.core.*
+import com.tomwyr.utils.capitalize
+
 
 class NodeTreeRenderer {
     fun render(packageName: String?, scenes: List<Scene>): String {
