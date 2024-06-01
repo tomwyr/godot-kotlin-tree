@@ -1,4 +1,4 @@
-package com.tomwyr.core
+package com.tomwyr.utils
 
 import java.io.File
 

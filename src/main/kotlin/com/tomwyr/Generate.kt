@@ -1,6 +1,10 @@
 package com.tomwyr
 
-import com.tomwyr.core.*
+import com.tomwyr.generator.NodeTreeGenerator
+import com.tomwyr.utils.GodotKotlinProject
+import com.tomwyr.utils.getOutputPath
+import com.tomwyr.utils.getProjectPath
+import com.tomwyr.core.Log
 import org.gradle.api.Project
 
 fun generate(project: Project, config: GodotNodeTreeConfig) {

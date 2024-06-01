@@ -1,9 +1,9 @@
 package com.tomwyr
 
-import com.tomwyr.core.GodotKotlinProject
 import com.tomwyr.core.Log
 import com.tomwyr.core.Logger
-import com.tomwyr.core.NodeTreeGenerator
+import com.tomwyr.generator.NodeTreeGenerator
+import com.tomwyr.utils.GodotKotlinProject
 import java.io.File
 import kotlin.test.BeforeTest
 import kotlin.test.Test

@@ -1,5 +1,7 @@
 package com.tomwyr.core
 
+import kotlin.math.max
+
 data class Scene(
     val name: String,
     val root: Node,
@@ -44,4 +46,28 @@ data class NestedScene(
     override fun flatten(): List<Node> = listOf(this)
 
     override fun longestPath(): List<Node> = listOf(this)
+}
+
+class NodeTreeInfo(
+        val nodes: Int,
+        val depth: Int,
+        val scenes: Int,
+) {
+    companion object {
+        operator fun invoke(scenes: List<Scene>): NodeTreeInfo {
+            var nodes = 0
+            var depth = 0
+
+            for (scene in scenes) {
+                nodes += scene.nodesCount
+                depth = max(depth, scene.nodesDepth)
+            }
+
+            return NodeTreeInfo(
+                    nodes = nodes,
+                    depth = depth,
+                    scenes = scenes.size,
+            )
+        }
+    }
 }

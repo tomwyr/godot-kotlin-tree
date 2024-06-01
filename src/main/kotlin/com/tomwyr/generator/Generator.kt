@@ -1,4 +1,9 @@
-package com.tomwyr.core
+package com.tomwyr.generator
+
+import com.tomwyr.utils.GodotKotlinProject
+import com.tomwyr.core.Log
+import com.tomwyr.core.NodeTreeInfo
+import com.tomwyr.core.Scene
 
 class NodeTreeGenerator(
     private val parser: SceneNodesParser = SceneNodesParser(),

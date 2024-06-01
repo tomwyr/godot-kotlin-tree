@@ -1,5 +1,7 @@
 package com.tomwyr.core
 
+import com.tomwyr.generator.NodeParams
+
 class InvalidGodotProjectException :
     Exception("The project in which GodotNodeTree annotation was used isn't a valid Godot project directory")
 
@@ -17,6 +19,3 @@ class UnexpectedSceneResource(instance: String) :
 
 class DuplicatedSceneResources(duplicates: Map<String, List<String>>) :
     Exception("Found multiple scenes for following resource ids: $duplicates")
-
-class UnexpectedSceneFormat(scenePath: String) :
-    Exception("A scene path with unexpected path format encountered: $scenePath")

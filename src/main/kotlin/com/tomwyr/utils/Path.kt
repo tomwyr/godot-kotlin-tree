@@ -1,5 +1,6 @@
-package com.tomwyr.core
+package com.tomwyr.utils
 
+import com.tomwyr.core.InvalidGodotProjectException
 import java.io.File
 import java.nio.file.FileSystems
 
