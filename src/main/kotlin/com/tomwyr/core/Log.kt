@@ -76,7 +76,8 @@ interface ParserLog : Logger {
 interface RendererLog : Logger {
     fun renderingNode(node: Node, nodePath: String) {
         when (node) {
-            is SceneNode -> debug("Rendering $nodePath node of type ${node.type}")
+            is ParentNode -> debug("Rendering $nodePath parent node of type ${node.type}")
+            is LeafNode -> debug("Rendering $nodePath left node of type ${node.type}")
             is NestedScene -> debug("Rendering $nodePath nested scene ${node.scene}")
         }
     }

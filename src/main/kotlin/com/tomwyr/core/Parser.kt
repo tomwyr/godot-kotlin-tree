@@ -131,7 +131,11 @@ data class NodeParams(
                     .getOrDefault(childrenKey, emptyList())
                     .map { it.toNode(childrenByParent, scenesByResourceId) }
 
-                SceneNode(name = name, type = type, children = children)
+                if (children.isNotEmpty()) {
+                    ParentNode(name = name, type = type, children = children)
+                } else {
+                    LeafNode(name = name, type = type)
+                }
             }
 
             type == null && instance != null -> {
