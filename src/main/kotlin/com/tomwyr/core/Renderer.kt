@@ -31,26 +31,27 @@ class NodeTreeRenderer {
     }
 
     private fun renderScene(scene: Scene): String {
+        val nodePath = "\$path/${scene.root.name}"
+
+        val renderNodeHeader = { type: String ->
+            """
+            |class ${scene.name}Scene(path: String) : NodeRef<${type}>("$nodePath", "$type")
+            """.trimMargin()
+        }
+
         return when (val root = scene.root) {
-            is SceneNode -> {
-                val nodePath = "\$path/${root.name}"
+            is ParentNode -> {
+                val header = renderNodeHeader(root.type)
+                val children = root.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
 
-                val header = """
-                |class ${scene.name}Scene(path: String) : NodeRef<${root.type}>("$nodePath", "${root.type}")
+                """
+                |$header {
+                |    $children
+                |}
                 """.trimMargin()
-
-                if (root.children.isNotEmpty()) {
-                    val children = root.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
-
-                    """
-                    |$header {
-                    |    $children
-                    |}
-                    """.trimMargin()
-                } else {
-                    header
-                }
             }
+
+            is LeafNode -> renderNodeHeader(root.type)
 
             is NestedScene -> {
                 """
@@ -70,7 +71,7 @@ class NodeTreeRenderer {
         Log.renderingNode(node, nodePath)
 
         return when (node) {
-            is SceneNode -> if (node.children.isNotEmpty()) {
+            is ParentNode -> {
                 val children = node.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
 
                 """
@@ -78,7 +79,9 @@ class NodeTreeRenderer {
                 |    $children
                 |}
                 """.trimMargin()
-            } else {
+            }
+
+            is LeafNode -> {
                 """
                 |val $symbolName = NodeRef<${node.type}>("$nodePath", "${node.type}")
                 """.trimMargin()

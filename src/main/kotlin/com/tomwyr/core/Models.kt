@@ -14,7 +14,7 @@ sealed class Node {
     abstract fun longestPath(): List<Node>
 }
 
-data class SceneNode(
+data class ParentNode(
     override val name: String,
     val type: String,
     val children: List<Node>,
@@ -26,6 +26,15 @@ data class SceneNode(
     override fun longestPath(): List<Node> {
         return children.map { it.longestPath() }.maxByOrNull { it.size }.orEmpty() + this
     }
+}
+
+data class LeafNode(
+    override val name: String,
+    val type: String,
+) : Node() {
+    override fun flatten(): List<Node> = listOf(this)
+
+    override fun longestPath(): List<Node> = listOf(this)
 }
 
 data class NestedScene(
