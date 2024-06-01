@@ -79,7 +79,7 @@ class NodeTreeRenderer {
                 val children = node.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
 
                 """
-                |object $symbolName : NodeRef<${node.type}>("$nodePath", "${node.type}") {
+                |val $symbolName = object : NodeRef<${node.type}>("$nodePath", "${node.type}") {
                 |    $children
                 |}
                 """.trimMargin()
