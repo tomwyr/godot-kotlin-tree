@@ -39,7 +39,7 @@ class NodeTreeRenderer {
 
         val renderNodeHeader = { type: String ->
             """
-            |class ${scene.name}Scene(path: String) : NodeRef<${type}>("$nodePath", "$type")
+            |class ${scene.name}Scene(private val path: String) : NodeRef<${type}>("$nodePath", "$type")
             """.trimMargin()
         }
 
@@ -59,7 +59,7 @@ class NodeTreeRenderer {
 
             is NestedScene -> {
                 """
-                |class ${scene.name}Scene(path: String) : ${root.scene}Scene(path)
+                |class ${scene.name}Scene(private val path: String) : ${root.scene}Scene(path)
                 """.trimMargin()
             }
         }
@@ -79,7 +79,8 @@ class NodeTreeRenderer {
                 val children = node.children.map { renderNode(it, nodePath) }.joinLines().indentLine()
 
                 """
-                |val $symbolName = object : NodeRef<${node.type}>("$nodePath", "${node.type}") {
+                |val $symbolName = ${symbolName}Tree()
+                |inner class ${symbolName}Tree : NodeRef<${node.type}>("$nodePath", "${node.type}") {
                 |    $children
                 |}
                 """.trimMargin()
