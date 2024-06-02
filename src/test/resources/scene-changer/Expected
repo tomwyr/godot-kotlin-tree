@@ -9,12 +9,12 @@ object GDTree {
     val SceneB = SceneBScene("/root")
 }
 
-class SceneAScene(path: String) : NodeRef<Panel>("$path/SceneA", "Panel") {
+class SceneAScene(private val path: String) : NodeRef<Panel>("$path/SceneA", "Panel") {
     val Label = NodeRef<Label>("$path/SceneA/Label", "Label")
     val GoToScene = NodeRef<Button>("$path/SceneA/GoToScene", "Button")
 }
 
-class SceneBScene(path: String) : NodeRef<Panel>("$path/SceneB", "Panel") {
+class SceneBScene(private val path: String) : NodeRef<Panel>("$path/SceneB", "Panel") {
     val Label = NodeRef<Label>("$path/SceneB/Label", "Label")
     val GoToScene = NodeRef<Button>("$path/SceneB/GoToScene", "Button")
 }

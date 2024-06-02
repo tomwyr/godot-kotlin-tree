@@ -8,7 +8,7 @@ object GDTree {
     val Main = MainScene("/root")
 }
 
-class MainScene(path: String) : NodeRef<GridContainer>("$path/Root", "GridContainer") {
+class MainScene(private val path: String) : NodeRef<GridContainer>("$path/Root", "GridContainer") {
     val KotlinGDJ = NodeRef<Label>("$path/Root/Kotlin GDJ", "Label")
     val JavaGDJ = NodeRef<Label>("$path/Root/Java GDJ", "Label")
     val KotlinSource = NodeRef<Label>("$path/Root/Kotlin source", "Label")

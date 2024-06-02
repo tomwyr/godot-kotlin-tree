@@ -8,7 +8,7 @@ object GDTree {
     val Main = MainScene("/root")
 }
 
-class MainScene(path: String) : NodeRef<Control>("$path/Main", "Control") {
+class MainScene(private val path: String) : NodeRef<Control>("$path/Main", "Control") {
     val TestsMenu = NodeRef<MenuButton>("$path/Main/TestsMenu", "MenuButton")
     val LabelControls = NodeRef<Label>("$path/Main/LabelControls", "Label")
     val LabelFPS = NodeRef<Label>("$path/Main/LabelFPS", "Label")
@@ -16,11 +16,14 @@ class MainScene(path: String) : NodeRef<Control>("$path/Main", "Control") {
     val LabelVersion = NodeRef<Label>("$path/Main/LabelVersion", "Label")
     val LabelTest = NodeRef<Label>("$path/Main/LabelTest", "Label")
     val LabelPause = NodeRef<Label>("$path/Main/LabelPause", "Label")
-    val PanelLog = object : NodeRef<Panel>("$path/Main/PanelLog", "Panel") {
+    val PanelLog = PanelLogTree()
+    inner class PanelLogTree : NodeRef<Panel>("$path/Main/PanelLog", "Panel") {
         val ButtonClear = NodeRef<Button>("$path/Main/PanelLog/ButtonClear", "Button")
         val CheckBoxScroll = NodeRef<CheckButton>("$path/Main/PanelLog/CheckBoxScroll", "CheckButton")
-        val ScrollLog = object : NodeRef<ScrollContainer>("$path/Main/PanelLog/ScrollLog", "ScrollContainer") {
-            val VBoxLog = object : NodeRef<VBoxContainer>("$path/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer") {
+        val ScrollLog = ScrollLogTree()
+        inner class ScrollLogTree : NodeRef<ScrollContainer>("$path/Main/PanelLog/ScrollLog", "ScrollContainer") {
+            val VBoxLog = VBoxLogTree()
+            inner class VBoxLogTree : NodeRef<VBoxContainer>("$path/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer") {
                 val LabelLog = NodeRef<Label>("$path/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
             }
         }

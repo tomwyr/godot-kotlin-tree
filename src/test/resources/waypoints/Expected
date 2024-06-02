@@ -9,24 +9,32 @@ object GDTree {
     val Waypoint = WaypointScene("/root")
 }
 
-class MainScene(path: String) : NodeRef<Node3D>("$path/Main", "Node3D") {
-    val BlueCube = object : NodeRef<MeshInstance3D>("$path/Main/BlueCube", "MeshInstance3D") {
-        val WaypointAnchor = object : NodeRef<Marker3D>("$path/Main/BlueCube/WaypointAnchor", "Marker3D") {
+class MainScene(private val path: String) : NodeRef<Node3D>("$path/Main", "Node3D") {
+    val BlueCube = BlueCubeTree()
+    inner class BlueCubeTree : NodeRef<MeshInstance3D>("$path/Main/BlueCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/BlueCube/WaypointAnchor", "Marker3D") {
             val Waypoint = WaypointScene("$path/Main/BlueCube/WaypointAnchor/Waypoint")
         }
     }
-    val GreenCube = object : NodeRef<MeshInstance3D>("$path/Main/GreenCube", "MeshInstance3D") {
-        val WaypointAnchor = object : NodeRef<Marker3D>("$path/Main/GreenCube/WaypointAnchor", "Marker3D") {
+    val GreenCube = GreenCubeTree()
+    inner class GreenCubeTree : NodeRef<MeshInstance3D>("$path/Main/GreenCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/GreenCube/WaypointAnchor", "Marker3D") {
             val Waypoint = WaypointScene("$path/Main/GreenCube/WaypointAnchor/Waypoint")
         }
     }
-    val YellowCube = object : NodeRef<MeshInstance3D>("$path/Main/YellowCube", "MeshInstance3D") {
-        val WaypointAnchor = object : NodeRef<Marker3D>("$path/Main/YellowCube/WaypointAnchor", "Marker3D") {
+    val YellowCube = YellowCubeTree()
+    inner class YellowCubeTree : NodeRef<MeshInstance3D>("$path/Main/YellowCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/YellowCube/WaypointAnchor", "Marker3D") {
             val Waypoint = WaypointScene("$path/Main/YellowCube/WaypointAnchor/Waypoint")
         }
     }
-    val RedCube = object : NodeRef<MeshInstance3D>("$path/Main/RedCube", "MeshInstance3D") {
-        val WaypointAnchor = object : NodeRef<Marker3D>("$path/Main/RedCube/WaypointAnchor", "Marker3D") {
+    val RedCube = RedCubeTree()
+    inner class RedCubeTree : NodeRef<MeshInstance3D>("$path/Main/RedCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/RedCube/WaypointAnchor", "Marker3D") {
             val Waypoint = WaypointScene("$path/Main/RedCube/WaypointAnchor/Waypoint")
         }
     }
@@ -34,12 +42,13 @@ class MainScene(path: String) : NodeRef<Node3D>("$path/Main", "Node3D") {
     val Label = NodeRef<Label>("$path/Main/Label", "Label")
     val Ground = NodeRef<MeshInstance3D>("$path/Main/Ground", "MeshInstance3D")
     val WhiteCube = NodeRef<MeshInstance3D>("$path/Main/WhiteCube", "MeshInstance3D")
-    val Environment = object : NodeRef<WorldEnvironment>("$path/Main/Environment", "WorldEnvironment") {
+    val Environment = EnvironmentTree()
+    inner class EnvironmentTree : NodeRef<WorldEnvironment>("$path/Main/Environment", "WorldEnvironment") {
         val Sun = NodeRef<DirectionalLight3D>("$path/Main/Environment/Sun", "DirectionalLight3D")
     }
 }
 
-class WaypointScene(path: String) : NodeRef<Control>("$path/Waypoint", "Control") {
+class WaypointScene(private val path: String) : NodeRef<Control>("$path/Waypoint", "Control") {
     val Label = NodeRef<Label>("$path/Waypoint/Label", "Label")
     val Marker = NodeRef<TextureRect>("$path/Waypoint/Marker", "TextureRect")
 }
