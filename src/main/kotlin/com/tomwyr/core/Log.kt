@@ -46,32 +46,43 @@ interface ProcessorLog : Logger {
 }
 
 interface ParserLog : Logger {
-    fun parsedSceneNodes(nodes: List<String>) {
-        info("${nodes.size} nodes found in the scene")
+    fun parsingScenePaths() {
+        info("Parsing scene paths by id from scene file")
     }
 
-    fun parsingNode(line: String) {
-        debug("Parsing node $line")
+    fun parsingSceneNodes() {
+        info("Parsing scene nodes from scene file")
     }
 
-    fun skippingNode() {
+    fun skippingNode(params: Map<String, String>) {
         info("Skipping node missing at least one of the required keys")
+        debug("Received params were $params")
     }
 
-    fun parsedSceneResources(resources: List<String>) {
-        info("${resources.size} scene resources found in the scene")
-    }
-
-    fun parsingSceneResource(line: String) {
-        debug("Parsing scene resource $line")
-    }
-
-    fun skippingSceneResource() {
+    fun skippingSceneResource(params: Map<String, String>) {
         info("Skipping scene resource missing at least one of the required keys")
+        debug("Received params were $params")
+    }
+
+    fun duplicatedSceneResources(duplicates: Map<String, List<String>>) {
+        warn("Found duplicated scenes for the following resource ids $duplicates")
+        warn("Only the last resource id for each scene will be retained")
     }
 
     fun creatingRootNode() {
         info("Creating node tree structure for the extracted nodes")
+    }
+
+    fun splittingEntries(entryType: String) {
+        info("Splitting file to entries of type $entryType")
+    }
+
+    fun parsingEntryParams(entry: String) {
+        info("Parsing params from entry $entry")
+    }
+
+    fun parsingSceneName(scenePath: String) {
+        info("Parsing scene name for path $scenePath")
     }
 }
 
