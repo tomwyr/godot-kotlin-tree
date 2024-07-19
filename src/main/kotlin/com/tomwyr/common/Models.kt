@@ -1,11 +1,10 @@
-package com.tomwyr.core
+package com.tomwyr.common
 
 import kotlin.math.max
 
-data class Scene(
-    val name: String,
-    val root: Node,
-) {
+class SceneData(val name: String, val content: String)
+
+data class Scene(val name: String, val root: Node) {
     val nodesCount: Int = root.flatten().size
     val nodesDepth: Int = root.longestPath().size
 }
