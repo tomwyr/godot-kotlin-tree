@@ -1,15 +1,9 @@
-package com.tomwyr.core
+package com.tomwyr.common
 
-import com.tomwyr.utils.SceneData
-
-interface Logger {
-    fun debug(message: String)
-    fun info(message: String)
-    fun warn(message: String)
-}
+import org.gradle.api.Project
 
 object Log : ProcessorLog, ParserLog, RendererLog, GeneratorLog, Logger {
-    lateinit var logger: Logger
+    var logger: Logger = Logger.noop()
 
     override fun debug(message: String) = logger.debug(message)
     override fun info(message: String) = logger.info(message)
@@ -119,5 +113,25 @@ interface GeneratorLog : Logger {
 
     fun resultSaved() {
         info("Output file saved")
+    }
+}
+
+interface Logger {
+    fun debug(message: String)
+    fun info(message: String)
+    fun warn(message: String)
+
+    companion object {
+        fun noop() = object : Logger {
+            override fun debug(message: String) {}
+            override fun info(message: String) {}
+            override fun warn(message: String) {}
+        }
+
+        fun stdOut(project: Project) = object : Logger {
+            override fun debug(message: String) = project.logger.debug(message)
+            override fun info(message: String) = project.logger.info(message)
+            override fun warn(message: String) = project.logger.warn(message)
+        }
     }
 }

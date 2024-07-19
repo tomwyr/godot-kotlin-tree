@@ -1,27 +1,29 @@
 package com.tomwyr.generator
 
-import com.tomwyr.core.*
+import com.tomwyr.common.*
 import com.tomwyr.utils.capitalize
-
 
 class NodeTreeRenderer {
     fun render(packageName: String?, scenes: List<Scene>): String {
-        val `package` = packageName?.let { "package $it" }
-        val imports = renderImports()
+        val header = renderHeader(packageName)
         val nodeTree = renderNodeTree(scenes)
         val sceneNodes = scenes.map { renderScene(it) }.joinLines(spacing = 2)
-        val nodeRef = renderNodeRef()
+        val types = renderTypes()
 
-        return listOfNotNull(`package`, imports, nodeTree, sceneNodes, nodeRef)
+        return listOfNotNull(header, nodeTree, sceneNodes, types)
             .joinLines(spacing = 2).plus("\n")
     }
 
-    private fun renderImports(): String {
+    private fun renderHeader(packageName: String?): String {
+        val packageOrEmpty = packageName?.let { "package $it" } ?: ""
+
         return """
+        |$packageOrEmpty
+        |
         |import godot.*
         |import godot.core.NodePath
         |import kotlin.reflect.KProperty
-        """.trimMargin()
+        """.trimMargin().trim()
     }
 
     private fun renderNodeTree(scenes: List<Scene>): String {
@@ -100,7 +102,7 @@ class NodeTreeRenderer {
         }
     }
 
-    private fun renderNodeRef(): String {
+    private fun renderTypes(): String {
         return """
         |open class NodeRef<T : Node>(
         |        private val path: String,
@@ -123,4 +125,4 @@ class NodeTreeRenderer {
 
 private fun Iterable<String>.joinLines(spacing: Int = 1): String = joinToString("\n".repeat(spacing))
 
-private fun String.indentLine(times: Int = 1) = lineSequence().joinToString("\n" + "    ".repeat(times))
+private fun String.indentLine(times: Int = 1): String = lineSequence().joinToString("\n" + "    ".repeat(times))

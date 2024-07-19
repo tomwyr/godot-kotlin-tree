@@ -1,9 +1,9 @@
 package com.tomwyr.generator
 
+import com.tomwyr.common.Log
+import com.tomwyr.common.NodeTreeInfo
+import com.tomwyr.common.Scene
 import com.tomwyr.utils.GodotKotlinProject
-import com.tomwyr.core.Log
-import com.tomwyr.core.NodeTreeInfo
-import com.tomwyr.core.Scene
 
 class NodeTreeGenerator(
     private val parser: SceneNodesParser = SceneNodesParser(),
@@ -16,7 +16,7 @@ class NodeTreeGenerator(
 
         val scenes = scenesData.map { data ->
             Log.parsingScene(data)
-            val root = parser.parse(data.content)
+            val root = parser.parse(data)
             Scene(data.name, root)
         }.toList()
 

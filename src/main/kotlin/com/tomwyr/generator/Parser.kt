@@ -1,19 +1,19 @@
 package com.tomwyr.generator
 
-import com.tomwyr.core.*
+import com.tomwyr.common.*
 import com.tomwyr.utils.capitalize
 
 class SceneNodesParser {
-    fun parse(sceneFileContent: String): Node {
-        val scenePathsById = ScenesParser().parse(sceneFileContent)
-        return NodesParser(scenePathsById).parse(sceneFileContent)
+    fun parse(sceneData: SceneData): Node {
+        val scenePathsById = ScenesParser().parse(sceneData)
+        return NodesParser(scenePathsById).parse(sceneData)
     }
 }
 
 private class ScenesParser {
-    fun parse(sceneFileContent: String): Map<String, String> {
+    fun parse(sceneData: SceneData): Map<String, String> {
         Log.parsingScenePaths()
-        return splitToEntries(sceneFileContent, "ext_resource")
+        return splitToEntries(sceneData.content, "ext_resource")
             .map(::parseEntryParams)
             .mapNotNull(::extractSceneIdToPath)
             .let(::getScenePathsById)
@@ -45,12 +45,12 @@ private class ScenesParser {
 }
 
 private class NodesParser(val scenePathsById: Map<String, String>) {
-    fun parse(sceneFileContent: String): Node {
+    fun parse(sceneData: SceneData): Node {
         Log.parsingSceneNodes()
-        return splitToEntries(sceneFileContent, "node")
+        return splitToEntries(sceneData.content, "node")
             .map(::parseEntryParams)
             .mapNotNull(::extractNodeParams)
-            .let(::createRootNode)
+            .let { createRootNode(sceneData.name, it) }
     }
 
 
@@ -68,10 +68,10 @@ private class NodesParser(val scenePathsById: Map<String, String>) {
         return NodeParams(name = name, type = type, instance = instance, parent = parent)
     }
 
-    private fun createRootNode(params: List<NodeParams>): Node {
+    private fun createRootNode(sceneName: String, params: List<NodeParams>): Node {
         Log.creatingRootNode()
         val childrenByParent = params.groupBy { it.parent }
-        val rootParams = params.single { it.parent == null }
+        val rootParams = params.firstOrNull { it.parent == null } ?: throw ParentNodeNotFound(sceneName)
         return rootParams.toNode(childrenByParent, scenePathsById)
     }
 }
