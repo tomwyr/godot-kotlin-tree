@@ -1,20 +1,13 @@
 package com.tomwyr
 
-import com.tomwyr.common.Log
-import com.tomwyr.common.Logger
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 class GodotNodeTree : Plugin<Project> {
     override fun apply(project: Project) {
-        initLog(project)
         registerTask(project)
         addSourceSet(project)
-    }
-
-    private fun initLog(project: Project) {
-        Log.logger = Logger.stdOut(project)
     }
 
     private fun registerTask(project: Project) {

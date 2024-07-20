@@ -12,7 +12,6 @@ class SceneNodesParser {
 
 private class ScenesParser {
     fun parse(sceneData: SceneData): Map<String, String> {
-        Log.parsingScenePaths()
         return splitToEntries(sceneData.content, "ext_resource")
             .map(::parseEntryParams)
             .mapNotNull(::extractSceneIdToPath)
@@ -24,7 +23,6 @@ private class ScenesParser {
         val path = params["path"]
 
         if (id == null || path == null) {
-            Log.skippingSceneResource(params)
             return null
         }
 
@@ -36,17 +34,12 @@ private class ScenesParser {
             .groupBy({ it.first }, { it.second })
             .filter { it.value.size > 1 }
 
-        if (duplicates.isNotEmpty()) {
-            Log.duplicatedSceneResources(duplicates)
-        }
-
         return sceneIdsToPaths.toMap()
     }
 }
 
 private class NodesParser(val scenePathsById: Map<String, String>) {
     fun parse(sceneData: SceneData): Node {
-        Log.parsingSceneNodes()
         return splitToEntries(sceneData.content, "node")
             .map(::parseEntryParams)
             .mapNotNull(::extractNodeParams)
@@ -61,7 +54,6 @@ private class NodesParser(val scenePathsById: Map<String, String>) {
         val parent = params["parent"]
 
         if (name == null || (type == null && instance == null) || (type != null && instance != null)) {
-            Log.skippingNode(params)
             return null
         }
 
@@ -69,7 +61,6 @@ private class NodesParser(val scenePathsById: Map<String, String>) {
     }
 
     private fun createRootNode(sceneName: String, params: List<NodeParams>): Node {
-        Log.creatingRootNode()
         val childrenByParent = params.groupBy { it.parent }
         val rootParams = params.firstOrNull { it.parent == null } ?: throw ParentNodeNotFound(sceneName)
         return rootParams.toNode(childrenByParent, scenePathsById)
@@ -114,13 +105,11 @@ data class NodeParams(
 }
 
 private fun splitToEntries(data: String, entryType: String): List<String> {
-    Log.splittingEntries(entryType)
     val pattern = """\[${entryType} .*]""".toRegex()
     return pattern.findAll(data).mapNotNull { it.groupValues.firstOrNull() }.toList()
 }
 
 private fun parseEntryParams(entry: String): Map<String, String> {
-    Log.parsingEntryParams(entry)
     val pattern = """(?:(\w+)=(?:\w+\("(.+)"\)|"(.+?)"))+""".toRegex()
     return pattern.findAll(entry).associate { match ->
         val (key, argumentValue, plainValue) = match.destructured
@@ -130,7 +119,6 @@ private fun parseEntryParams(entry: String): Map<String, String> {
 }
 
 private fun parseSceneName(scenePath: String): String? {
-    Log.parsingEntryParams(scenePath)
     val pattern = """^res://(.*).tscn$""".toRegex()
     return pattern.find(scenePath)?.groupValues?.getOrNull(1)
 }

@@ -34,15 +34,6 @@ class GeneratorTest {
     fun `multiple scenes`() {
         test("dodge-the-creeps", "com.example.game")
     }
-
-    @BeforeTest
-    fun setUpTestLogger() {
-        Log.logger = object : Logger {
-            override fun debug(message: String) {}
-            override fun info(message: String) {}
-            override fun warn(message: String) {}
-        }
-    }
 }
 
 fun test(testCase: String, targetPackage: String) {
