@@ -1,7 +1,5 @@
 package com.tomwyr
 
-import com.tomwyr.common.Log
-import com.tomwyr.common.Logger
 import com.tomwyr.generator.NodeTreeGenerator
 import com.tomwyr.utils.GodotKotlinProject
 import java.io.File
