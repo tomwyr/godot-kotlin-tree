@@ -64,8 +64,6 @@ class NodeTreeRenderer {
             .mapIndexed { index: Int, s: String -> if (index == 0) s else s.capitalize() }
             .joinToString("")
 
-        Log.renderingNode(node, nodePath)
-
         val field = when (node) {
             is ParentNode -> """
             |val $symbolName = ${symbolName}Tree()
