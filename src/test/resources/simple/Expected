@@ -16,8 +16,8 @@ class MainScene(private val path: String) : NodeRef<GridContainer>("$path/Root",
 }
 
 open class NodeRef<T : Node>(
-        private val path: String,
-        private val type: String,
+    private val path: String,
+    private val type: String,
 ) {
     operator fun getValue(thisRef: Node, property: KProperty<*>): T {
         val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)

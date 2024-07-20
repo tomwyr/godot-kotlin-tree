@@ -26,12 +26,13 @@ class MainScene(private val path: String) : NodeRef<Node>("$path/Main", "Node") 
     val StartTimer = NodeRef<Timer>("$path/Main/StartTimer", "Timer")
     val StartPosition = NodeRef<Marker2D>("$path/Main/StartPosition", "Marker2D")
     val MobPath = MobPathTree()
-    inner class MobPathTree : NodeRef<Path2D>("$path/Main/MobPath", "Path2D") {
-        val MobSpawnLocation = NodeRef<PathFollow2D>("$path/Main/MobPath/MobSpawnLocation", "PathFollow2D")
-    }
     val HUD = HUDScene("$path/Main/HUD")
     val Music = NodeRef<AudioStreamPlayer>("$path/Main/Music", "AudioStreamPlayer")
     val DeathSound = NodeRef<AudioStreamPlayer>("$path/Main/DeathSound", "AudioStreamPlayer")
+
+    inner class MobPathTree : NodeRef<Path2D>("$path/Main/MobPath", "Path2D") {
+        val MobSpawnLocation = NodeRef<PathFollow2D>("$path/Main/MobPath/MobSpawnLocation", "PathFollow2D")
+    }
 }
 
 class MobScene(private val path: String) : NodeRef<RigidBody2D>("$path/Mob", "RigidBody2D") {
@@ -47,8 +48,8 @@ class PlayerScene(private val path: String) : NodeRef<Area2D>("$path/Player", "A
 }
 
 open class NodeRef<T : Node>(
-        private val path: String,
-        private val type: String,
+    private val path: String,
+    private val type: String,
 ) {
     operator fun getValue(thisRef: Node, property: KProperty<*>): T {
         val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
