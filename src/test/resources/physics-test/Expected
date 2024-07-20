@@ -17,12 +17,15 @@ class MainScene(private val path: String) : NodeRef<Control>("$path/Main", "Cont
     val LabelTest = NodeRef<Label>("$path/Main/LabelTest", "Label")
     val LabelPause = NodeRef<Label>("$path/Main/LabelPause", "Label")
     val PanelLog = PanelLogTree()
+
     inner class PanelLogTree : NodeRef<Panel>("$path/Main/PanelLog", "Panel") {
         val ButtonClear = NodeRef<Button>("$path/Main/PanelLog/ButtonClear", "Button")
         val CheckBoxScroll = NodeRef<CheckButton>("$path/Main/PanelLog/CheckBoxScroll", "CheckButton")
         val ScrollLog = ScrollLogTree()
+
         inner class ScrollLogTree : NodeRef<ScrollContainer>("$path/Main/PanelLog/ScrollLog", "ScrollContainer") {
             val VBoxLog = VBoxLogTree()
+
             inner class VBoxLogTree : NodeRef<VBoxContainer>("$path/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer") {
                 val LabelLog = NodeRef<Label>("$path/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
             }
@@ -31,8 +34,8 @@ class MainScene(private val path: String) : NodeRef<Control>("$path/Main", "Cont
 }
 
 open class NodeRef<T : Node>(
-        private val path: String,
-        private val type: String,
+    private val path: String,
+    private val type: String,
 ) {
     operator fun getValue(thisRef: Node, property: KProperty<*>): T {
         val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)

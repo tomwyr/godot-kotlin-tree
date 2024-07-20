@@ -11,38 +11,47 @@ object GDTree {
 
 class MainScene(private val path: String) : NodeRef<Node3D>("$path/Main", "Node3D") {
     val BlueCube = BlueCubeTree()
-    inner class BlueCubeTree : NodeRef<MeshInstance3D>("$path/Main/BlueCube", "MeshInstance3D") {
-        val WaypointAnchor = WaypointAnchorTree()
-        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/BlueCube/WaypointAnchor", "Marker3D") {
-            val Waypoint = WaypointScene("$path/Main/BlueCube/WaypointAnchor/Waypoint")
-        }
-    }
     val GreenCube = GreenCubeTree()
-    inner class GreenCubeTree : NodeRef<MeshInstance3D>("$path/Main/GreenCube", "MeshInstance3D") {
-        val WaypointAnchor = WaypointAnchorTree()
-        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/GreenCube/WaypointAnchor", "Marker3D") {
-            val Waypoint = WaypointScene("$path/Main/GreenCube/WaypointAnchor/Waypoint")
-        }
-    }
     val YellowCube = YellowCubeTree()
-    inner class YellowCubeTree : NodeRef<MeshInstance3D>("$path/Main/YellowCube", "MeshInstance3D") {
-        val WaypointAnchor = WaypointAnchorTree()
-        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/YellowCube/WaypointAnchor", "Marker3D") {
-            val Waypoint = WaypointScene("$path/Main/YellowCube/WaypointAnchor/Waypoint")
-        }
-    }
     val RedCube = RedCubeTree()
-    inner class RedCubeTree : NodeRef<MeshInstance3D>("$path/Main/RedCube", "MeshInstance3D") {
-        val WaypointAnchor = WaypointAnchorTree()
-        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/RedCube/WaypointAnchor", "Marker3D") {
-            val Waypoint = WaypointScene("$path/Main/RedCube/WaypointAnchor/Waypoint")
-        }
-    }
     val Camera3D = NodeRef<Camera3D>("$path/Main/Camera3D", "Camera3D")
     val Label = NodeRef<Label>("$path/Main/Label", "Label")
     val Ground = NodeRef<MeshInstance3D>("$path/Main/Ground", "MeshInstance3D")
     val WhiteCube = NodeRef<MeshInstance3D>("$path/Main/WhiteCube", "MeshInstance3D")
     val Environment = EnvironmentTree()
+
+    inner class BlueCubeTree : NodeRef<MeshInstance3D>("$path/Main/BlueCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/BlueCube/WaypointAnchor", "Marker3D") {
+            val Waypoint = WaypointScene("$path/Main/BlueCube/WaypointAnchor/Waypoint")
+        }
+    }
+
+    inner class GreenCubeTree : NodeRef<MeshInstance3D>("$path/Main/GreenCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/GreenCube/WaypointAnchor", "Marker3D") {
+            val Waypoint = WaypointScene("$path/Main/GreenCube/WaypointAnchor/Waypoint")
+        }
+    }
+
+    inner class YellowCubeTree : NodeRef<MeshInstance3D>("$path/Main/YellowCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/YellowCube/WaypointAnchor", "Marker3D") {
+            val Waypoint = WaypointScene("$path/Main/YellowCube/WaypointAnchor/Waypoint")
+        }
+    }
+
+    inner class RedCubeTree : NodeRef<MeshInstance3D>("$path/Main/RedCube", "MeshInstance3D") {
+        val WaypointAnchor = WaypointAnchorTree()
+
+        inner class WaypointAnchorTree : NodeRef<Marker3D>("$path/Main/RedCube/WaypointAnchor", "Marker3D") {
+            val Waypoint = WaypointScene("$path/Main/RedCube/WaypointAnchor/Waypoint")
+        }
+    }
+
     inner class EnvironmentTree : NodeRef<WorldEnvironment>("$path/Main/Environment", "WorldEnvironment") {
         val Sun = NodeRef<DirectionalLight3D>("$path/Main/Environment/Sun", "DirectionalLight3D")
     }
@@ -54,8 +63,8 @@ class WaypointScene(private val path: String) : NodeRef<Control>("$path/Waypoint
 }
 
 open class NodeRef<T : Node>(
-        private val path: String,
-        private val type: String,
+    private val path: String,
+    private val type: String,
 ) {
     operator fun getValue(thisRef: Node, property: KProperty<*>): T {
         val node = thisRef.getNode(NodePath(path)) ?: throw NodeNotFoundException(path)
