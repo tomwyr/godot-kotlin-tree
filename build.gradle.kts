@@ -13,8 +13,6 @@ plugins {
     kotlin("jvm") version "1.9.20"
     id("com.gradle.plugin-publish") version "1.2.1"
     id("com.adarshr.test-logger") version "4.0.0"
-    `maven-publish`
-    signing
 }
 
 repositories {
@@ -36,7 +34,6 @@ gradlePlugin {
     website = "https://github.com/tomwyr/godot-kotlin-tree"
     vcsUrl = "https://github.com/tomwyr/godot-kotlin-tree.git"
 
-    fun bindProp(key: String) = System.setProperty(key, prop(key))
     bindProp("gradle.publish.key")
     bindProp("gradle.publish.secret")
 
@@ -56,69 +53,11 @@ java {
     withSourcesJar()
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("plugin") {
-            artifactId = "godot-kotlin-tree"
-            from(components["java"])
-
-            pom {
-                name = "Godot Kotlin Tree"
-                description = "A type-safe Godot node tree representation in Kotlin"
-                url = "https://github.com/tomwyr/godot-kotlin-tree"
-
-                licenses {
-                    license {
-                        name = "MIT License"
-                        url = "https://gist.github.com/tomwyr/2edea68a06b67d69b2a80964a3ff6f34"
-                    }
-                }
-
-                developers {
-                    developer {
-                        id = "tomwyr"
-                        name = "Tomasz Wyrowiński"
-                        url = "https://github.com/tomwyr"
-                    }
-                }
-
-                scm {
-                    url = "https://github.com/tomwyr/godot-kotlin-tree"
-                    connection = "scm:git:git://github.com/tomwyr/godot-kotlin-tree.git"
-                }
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            val releasesRepoUrl = "https://s01.oss.sonatype.org/content/repositories/releases/"
-            val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            url = uri(if (isSnapshot) snapshotsRepoUrl else releasesRepoUrl)
-
-            credentials {
-                username = prop("maven.repo.username")
-                password = prop("maven.repo.password")
-            }
-        }
-    }
+fun bindProp(key: String) {
+    val value = localProperties[key] as? String ?: throw Exception("Expected local property $key not set")
+    System.setProperty(key, value)
 }
-
-signing {
-    isRequired = true
-    val signingKey = prop("maven.signing.key").replace("\\n", "\n")
-    val signingPassword = prop("maven.signing.password")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["plugin"])
-}
-
-val isSnapshot: Boolean
-    get() = version.toString().endsWith("SNAPSHOT")
 
 fun loadLocalProps() = Properties().apply {
     load(FileInputStream(rootProject.file("local.properties")))
-}
-
-fun prop(key: String): String {
-    return localProperties[key] as? String ?: throw Exception("Expected local property $key not set")
 }
