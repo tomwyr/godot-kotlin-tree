@@ -1,9 +1,7 @@
 package com.tomwyr
 
-import com.tomwyr.generator.NodeTreeGenerator
-import com.tomwyr.utils.GodotKotlinProject
+import com.tomwyr.command.GenerateTreeCommand
 import java.io.File
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -34,10 +32,10 @@ class GeneratorTest {
     }
 }
 
-fun test(testCase: String, targetPackage: String) {
+fun test(testCase: String, packageName: String) {
     try {
-        val project = setUpTestProject(testCase, targetPackage)
-        NodeTreeGenerator().generate(project)
+        val command = setUpTestCommand(testCase, packageName)
+        command.run()
         assertOutputsEqual(testCase)
     } finally {
         cleanUpGeneratedOutput(testCase)
@@ -46,11 +44,12 @@ fun test(testCase: String, targetPackage: String) {
 
 const val basePath = "src/test/resources/"
 
-fun setUpTestProject(testCase: String, targetPackage: String): GodotKotlinProject {
-    return GodotKotlinProject(
-        "$basePath/$testCase/scenes",
-        "$basePath/$testCase/Actual",
-        targetPackage,
+fun setUpTestCommand(testCase: String, packageName: String): GenerateTreeCommand {
+    return GenerateTreeCommand(
+        libPath = "NodeTreeGenerator.dylib",
+        projectPath = "$basePath/$testCase/scenes",
+        outputPath = "$basePath/$testCase/Actual",
+        packageName = packageName,
     )
 }
 
