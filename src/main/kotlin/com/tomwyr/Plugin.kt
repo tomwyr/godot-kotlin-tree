@@ -12,10 +12,10 @@ class GodotNodeTree : Plugin<Project> {
     }
 
     private fun registerTask(project: Project) {
-        val params = project.extensions.create("godotNodeTree", GodotNodeTreeInput::class.java)
+        val input = project.extensions.create("godotNodeTree", GodotNodeTreeInput::class.java)
         project.tasks.register("generateNodeTree") { task ->
             task.doLast {
-                GenerateTreeCommand.from(project, params).run()
+                GenerateTreeCommand.from(project, input).run()
             }
         }
     }
