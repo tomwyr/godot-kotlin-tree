@@ -11,6 +11,7 @@ description = "A type-safe Godot node tree representation in Kotlin"
 
 plugins {
     kotlin("jvm") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.25"
     id("com.gradle.plugin-publish") version "1.2.1"
     id("com.adarshr.test-logger") version "4.0.0"
 }
@@ -21,6 +22,8 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
+    implementation("net.java.dev.jna:jna:5.17.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     testImplementation(kotlin("test"))
 }
 

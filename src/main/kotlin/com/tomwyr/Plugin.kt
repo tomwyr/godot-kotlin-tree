@@ -1,5 +1,6 @@
 package com.tomwyr
 
+import com.tomwyr.command.GenerateTreeCommand
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
@@ -11,10 +12,10 @@ class GodotNodeTree : Plugin<Project> {
     }
 
     private fun registerTask(project: Project) {
-        val config = project.extensions.create("godotNodeTree", GodotNodeTreeConfig::class.java)
+        val params = project.extensions.create("godotNodeTree", GodotNodeTreeInput::class.java)
         project.tasks.register("generateNodeTree") { task ->
             task.doLast {
-                GenerateTreeCommand().run(project, config)
+                GenerateTreeCommand.from(project, params).run()
             }
         }
     }
@@ -26,7 +27,7 @@ class GodotNodeTree : Plugin<Project> {
     }
 }
 
-open class GodotNodeTreeConfig(
-        var projectPath: String? = null,
-        var packageName: String? = null,
+open class GodotNodeTreeInput(
+    var projectPath: String? = null,
+    var packageName: String? = null,
 )

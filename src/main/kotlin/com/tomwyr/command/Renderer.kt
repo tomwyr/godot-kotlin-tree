@@ -1,13 +1,12 @@
-package com.tomwyr.generator
+package com.tomwyr.command
 
 import com.tomwyr.common.*
-import com.tomwyr.utils.capitalize
 
 class NodeTreeRenderer {
-    fun render(packageName: String?, scenes: List<Scene>): String {
+    fun render(packageName: String?, tree: NodeTree): String {
         val header = renderHeader(packageName)
-        val nodeTree = renderNodeTree(scenes)
-        val sceneNodes = scenes.map { renderScene(it) }.joinLines(spacing = 2)
+        val nodeTree = renderNodeTree(tree.scenes)
+        val sceneNodes = tree.scenes.map { renderScene(it) }.joinLines(spacing = 2)
         val types = renderTypes()
 
         return listOf(header, nodeTree, sceneNodes, types)
@@ -149,5 +148,7 @@ private fun Iterable<String>.joinLines(spacing: Int = 1): String = joinToString(
 private fun String.indentLine(times: Int = 1): String = lineSequence().joinToString("\n" + "    ".repeat(times))
 
 private fun String.trimBlankLines(): String = lineSequence().joinToString("\n") { it.ifBlank { "" } }
+
+private fun String.capitalize(): String = replaceFirstChar { it.uppercase() }
 
 private data class RenderNodeResult(val field: String, val nestedClass: String?)
