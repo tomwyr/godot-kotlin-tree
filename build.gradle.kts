@@ -46,7 +46,7 @@ gradlePlugin {
             displayName = "Godot Kotlin Tree"
             description = "A type-safe Godot node tree representation in Kotlin"
             tags = listOf("godot", "kotlin", "node", "tree")
-            implementationClass = "com.tomwyr.GodotNodeTree"
+            implementationClass = "com.tomwyr.GodotKotlinTree"
         }
     }
 }

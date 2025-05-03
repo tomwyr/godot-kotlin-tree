@@ -25,6 +25,7 @@ godot {
 }
 
 godotNodeTree {
+    projectPath = "../dodge-the-creeps"
     packageName = "com.example.game"
 }
 

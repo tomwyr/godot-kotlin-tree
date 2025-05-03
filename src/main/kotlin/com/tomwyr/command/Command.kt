@@ -1,6 +1,6 @@
 package com.tomwyr.command
 
-import com.tomwyr.GodotNodeTreeInput
+import com.tomwyr.GodotKotlinTreeInput
 import com.tomwyr.common.InvalidGodotProject
 import com.tomwyr.ffi.generateNodeTree
 import org.gradle.api.Project
@@ -20,7 +20,7 @@ class GenerateTreeCommand(
     }
 
     companion object Factory {
-        fun from(project: Project, input: GodotNodeTreeInput): GenerateTreeCommand {
+        fun from(project: Project, input: GodotKotlinTreeInput): GenerateTreeCommand {
             val rootPath = project.projectDir.absolutePath
             val libPath = "GodotNodeTreeCore"
             val projectPath = getProjectPath(rootPath = rootPath, relativePath = input.projectPath)
