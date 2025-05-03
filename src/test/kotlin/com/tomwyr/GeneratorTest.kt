@@ -46,7 +46,7 @@ const val basePath = "src/test/resources/"
 
 fun setUpTestCommand(testCase: String, packageName: String): GenerateTreeCommand {
     return GenerateTreeCommand(
-        libPath = "NodeTreeGenerator.dylib",
+        libPath = "libGodotNodeTreeCore.dylib",
         projectPath = "$basePath/$testCase/scenes",
         outputPath = "$basePath/$testCase/Actual",
         packageName = packageName,

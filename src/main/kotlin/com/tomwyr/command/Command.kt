@@ -22,7 +22,7 @@ class GenerateTreeCommand(
     companion object Factory {
         fun from(project: Project, input: GodotNodeTreeInput): GenerateTreeCommand {
             val rootPath = project.projectDir.absolutePath
-            val libPath = "NodeTreeGenerator.dylib"
+            val libPath = "GodotNodeTreeCore"
             val projectPath = getProjectPath(rootPath = rootPath, relativePath = input.projectPath)
             val outputPath = getOutputPath(rootPath = rootPath, packageName = input.packageName)
 
