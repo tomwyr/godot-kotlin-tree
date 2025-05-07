@@ -36,9 +36,8 @@ class GenerateTreeCommand(
 
         private fun getProjectPath(rootPath: String, relativePath: String?): String {
             val fileName = "project.godot"
-            val path = Paths.get(rootPath, relativePath ?: "", fileName).toString()
-            if (!File(path).exists()) throw InvalidGodotProject()
-            return path
+            val path = Paths.get(rootPath, relativePath ?: "", fileName)
+            return path.toString()
         }
 
         private fun getOutputPath(rootPath: String, packageName: String?): String {

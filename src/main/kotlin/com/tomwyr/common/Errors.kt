@@ -4,18 +4,16 @@ import kotlinx.serialization.Serializable
 
 sealed class GodotKotlinTreeError : Exception() {
     override fun getLocalizedMessage(): String = when (this) {
-        is InvalidGodotProject -> "The project in which GodotNodeTree annotation was used isn't a valid Godot project directory"
         is GeneratorError -> error.localizedMessage
     }
 }
-
-class InvalidGodotProject : GodotKotlinTreeError()
 
 class GeneratorError(val error: GodotNodeTreeError) : GodotKotlinTreeError()
 
 @Serializable
 sealed class GodotNodeTreeError : Exception() {
     override fun getLocalizedMessage(): String = when (this) {
+        is InvalidGodotProject -> "Godot project could not be found at path `$projectPath`."
         is ScanningScenesFailed -> "Unable to scan scene files for project at `$projectPath`."
         is ReadingSceneFailed -> "Unable to read contens of scene at `$scenePath`."
         is UnexpectedNodeParameters -> "A node with unexpected set of parameters encountered: $nodeParams."
@@ -23,6 +21,9 @@ sealed class GodotNodeTreeError : Exception() {
         is ParentNodeNotFound -> "None of the parsed nodes was identified as the parent node of scene $sceneName."
     }
 }
+
+@Serializable
+class InvalidGodotProject(val projectPath: String) : GodotNodeTreeError()
 
 @Serializable
 class ScanningScenesFailed(val projectPath: String) : GodotNodeTreeError()
