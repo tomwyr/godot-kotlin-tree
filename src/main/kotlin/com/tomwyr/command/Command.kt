@@ -1,20 +1,23 @@
 package com.tomwyr.command
 
 import com.tomwyr.GodotKotlinTreeInput
-import com.tomwyr.common.InvalidGodotProject
 import com.tomwyr.ffi.generateNodeTree
 import org.gradle.api.Project
-import java.io.File
 import java.nio.file.Paths
 
 class GenerateTreeCommand(
     val libPath: String,
     val projectPath: String,
+    val validateProjectPath: Boolean,
     val outputPath: String,
     val packageName: String?,
 ) {
     fun run() {
-        val tree = generateNodeTree(libPath = libPath, projectPath = projectPath)
+        val tree = generateNodeTree(
+            libPath = libPath,
+            projectPath = projectPath,
+            validateProjectPath = validateProjectPath
+        )
         val content = NodeTreeRenderer().render(packageName, tree)
         NodeTreeWriter().write(content, outputPath)
     }
@@ -29,6 +32,7 @@ class GenerateTreeCommand(
             return GenerateTreeCommand(
                 libPath = libPath,
                 projectPath = projectPath,
+                validateProjectPath = input.validateProjectPath,
                 outputPath = outputPath,
                 packageName = input.packageName
             )

@@ -7,9 +7,9 @@ import com.tomwyr.common.GeneratorError
 import com.tomwyr.common.GodotNodeTreeError
 import com.tomwyr.common.NodeTree
 
-fun generateNodeTree(libPath: String, projectPath: String): NodeTree {
+fun generateNodeTree(libPath: String, projectPath: String, validateProjectPath: Boolean): NodeTree {
   val lib = Native.load(libPath, GodotNodeTreeLib::class.java)
-  val resultPtr = lib.generateNodeTree(projectPath)
+  val resultPtr = lib.generateNodeTree(projectPath, validateProjectPath)
   val result = Result.fromJson<NodeTree, GodotNodeTreeError>(resultPtr.getString(0))
   return when (result) {
     is Ok -> result.value
@@ -18,5 +18,5 @@ fun generateNodeTree(libPath: String, projectPath: String): NodeTree {
 }
 
 interface GodotNodeTreeLib : Library {
-  fun generateNodeTree(projectPath: String): Pointer
+  fun generateNodeTree(projectPath: String, validateProjectPath: Boolean): Pointer
 }

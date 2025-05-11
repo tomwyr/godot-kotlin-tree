@@ -48,6 +48,7 @@ fun setUpTestCommand(testCase: String, packageName: String): GenerateTreeCommand
     return GenerateTreeCommand(
         libPath = "libGodotNodeTreeCore.dylib",
         projectPath = "$basePath/$testCase/scenes",
+        validateProjectPath = false,
         outputPath = "$basePath/$testCase/Actual",
         packageName = packageName,
     )

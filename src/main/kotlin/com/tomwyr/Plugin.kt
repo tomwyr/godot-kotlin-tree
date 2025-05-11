@@ -29,5 +29,6 @@ class GodotKotlinTree : Plugin<Project> {
 
 open class GodotKotlinTreeInput(
     var projectPath: String? = null,
+    var validateProjectPath: Boolean = true,
     var packageName: String? = null,
 )
