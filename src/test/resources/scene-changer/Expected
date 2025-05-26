@@ -1,6 +1,6 @@
 package com.scenes.changer
 
-import godot.*
+import godot.api.*
 import godot.core.NodePath
 import kotlin.reflect.KProperty
 

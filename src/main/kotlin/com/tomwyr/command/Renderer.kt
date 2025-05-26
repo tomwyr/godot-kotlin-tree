@@ -19,7 +19,7 @@ class NodeTreeRenderer {
         return """
         |$packageOrEmpty
         |
-        |import godot.*
+        |import godot.api.*
         |import godot.core.NodePath
         |import kotlin.reflect.KProperty
         """.trimMargin().trim()
