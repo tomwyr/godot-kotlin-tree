@@ -1,5 +1,8 @@
 # Godot Kotlin Tree
 
+> [!Important]
+> The current version of the project has been tested on macOS and **may not work properly** on Linux and Windows.
+
 Godot Kotlin Tree enhances development of Godot games using Kotlin bindings by generating a statically typed object mapping the Godot project nodes to Kotlin.
 
 In short, instead of referencing node with a string path and casting:
@@ -108,6 +111,7 @@ _Note: the end part of bindings version is also the compatible engine version._
 | godot-kotlin-tree | godot-kotlin-jvm |
 | ----------------- | ---------------- |
 | 1.0.x             | 0.8.1-4.2.0      |
+| 1.1.x             | 0.13.1-4.4.1      |
 
 Other pairs of versions may also work but their compatibility has never been tested and proper behavior of the plugin isn't guaranteed.
 
