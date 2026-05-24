@@ -30,7 +30,7 @@ Configure plugin in the `build.gradle.kts` file:
 ```kotlin
 // Add plugin dependency
 plugins {
-  id("io.github.tomwyr.godot-kotlin-tree") version "1.1.1"
+  id("io.github.tomwyr.godot-kotlin-tree") version "1.2.0"
 }
 
 // Include generated code in the project sources
@@ -50,6 +50,7 @@ godotNodeTree {
 ```
 
 Add plugin repository declaration to the `settings.gradle.kts` file:
+
 ```kotlin
 pluginManagement {
     repositories {
@@ -110,8 +111,9 @@ _Note: the end part of bindings version is also the compatible engine version._
 
 | godot-kotlin-tree | godot-kotlin-jvm |
 | ----------------- | ---------------- |
+| 1.2.x             | 0.16.1-4.6.3     |
+| 1.1.x             | 0.13.1-4.4.1     |
 | 1.0.x             | 0.8.1-4.2.0      |
-| 1.1.x             | 0.13.1-4.4.1      |
 
 Other pairs of versions may also work but their compatibility has never been tested and proper behavior of the plugin isn't guaranteed.
 

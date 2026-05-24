@@ -1,3 +1,7 @@
+// Uncomment to build against plugin's local version.
+// pluginManagement {
+//     includeBuild("../")
+// }
 
 plugins {
     // to automatically download the toolchain jdk if missing
