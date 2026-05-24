@@ -5,3 +5,6 @@
 build
 
 local.properties
+
+# macOS related
+.DS_Store
