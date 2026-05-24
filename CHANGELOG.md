@@ -1,8 +1,12 @@
+# 1.1.1 - 2026-05-24
+
+- Fixed validating project path
+
 # 1.1.0 - 2025-07-26
 
 - Made project compatible with Godot 4.4
 - Improved overall code quality
-- Extracted parsing node tree to shared core library 
+- Extracted parsing node tree to shared core library
 
 # 1.0.0 - 2024-09-13
 
