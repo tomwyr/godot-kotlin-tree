@@ -42,13 +42,13 @@ fun test(testCase: String, packageName: String) {
     }
 }
 
-const val basePath = "src/test/resources/"
+const val basePath = "src/test/resources"
 
 fun setUpTestCommand(testCase: String, packageName: String): GenerateTreeCommand {
     return GenerateTreeCommand(
         libPath = "libGodotNodeTreeCore" + getLibExtension(),
-        projectPath = "$basePath/$testCase/scenes",
-        validateProjectPath = false,
+        projectPath = "$basePath/$testCase",
+        validateProjectPath = true,
         outputPath = "$basePath/$testCase/Actual",
         packageName = packageName,
     )
